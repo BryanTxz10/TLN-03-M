@@ -1,0 +1,15 @@
+hostname R2
+!
+interface lo0
+ip address 2.2.2.2 255.255.255.255
+!
+interface e0/1
+ ip address 10.0.0.2 255.255.255.252
+ no shutdown
+!
+router ospf 10
+router-id 2.2.2.2
+network 2.2.2.2 0.0.0.0 area 0
+network 10.0.0.0 0.0.0.3 area 0
+!
+end
