@@ -5,7 +5,7 @@
 Repositorio base para el curso Electivo TLN03 de la Universidad Nacional de Ingenieria.
 
 ## Topología
-![Topologia](docs/Topologia%20Base-1.png)
+![Topologia](docs/Topologia%20Base-2.png)
 ## Tecnologías
 - Linux
 - Docker
