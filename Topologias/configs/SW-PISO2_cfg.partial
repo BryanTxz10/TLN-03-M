@@ -1,15 +1,17 @@
+vtp mode transparent
+!
 vlan 10
 vlan 20
 !
-int e0/1
-sw trun enc dot1q
-sw mode trunk
-sw trunk allow vlan 10,20
+interface e0/1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allow vlan 10,20
 !
-int e0/2
-sw mode access
-sw acc vlan 20
+interface e0/2
+switchport mode access
+switchport access vlan 20
 !
-int e0/3
-sw mode access
-sw acc vlan 20
+interface e0/3
+switchport mode access
+switchport access vlan 20

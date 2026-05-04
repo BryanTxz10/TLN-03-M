@@ -1,0 +1,73 @@
+!
+crypto isakmp policy 10
+ encr aes
+ hash md5
+ authentication pre-share
+ group 5
+ lifetime 1000
+crypto isakmp key TLN03 address 200.0.1.1
+!
+crypto ipsec transform-set TS-TO-BRANCH esp-3des esp-md5-hmac 
+ mode transport
+!
+crypto ipsec profile PF-TO-BRANCH
+ set transform-set TS-TO-BRANCH
+!
+interface Loopback0
+ ip address 190.0.1.1 255.255.255.255
+!
+interface Ethernet0/1
+ ip address 10.0.0.66 255.255.255.252
+ ip nat outside
+!
+interface Ethernet0/2
+ no ip address 
+ no shutdown
+!
+interface Ethernet0/2.10
+ encapsulation dot1q 10
+ ip address 192.168.10.3 255.255.255.0
+ ip nat inside
+ vrrp 10 ip 192.168.10.1
+ vrrp 10 priority 95
+ no shutdown
+!
+interface Ethernet0/2.20
+ encapsulation dot1q 20
+ ip address 192.168.20.3 255.255.255.0
+ ip nat inside
+ vrrp 20 ip 192.168.20.1
+ vrrp 20 priority 95
+ no shutdown
+!
+interface Tunnel1
+ ip address 172.16.20.1 255.255.255.252
+ tunnel source 190.0.1.1
+ tunnel destination 200.0.1.1
+ ip ospf hello-interval 5
+ ip ospf dead-interval 20
+ tunnel protection ipsec profile PF-TO-BRANCH
+!
+ip forward-protocol nd
+!
+router ospf 10
+router-id 3.3.3.3
+passive-interface ethernet0/2.10
+passive-interface ethernet0/2.20
+network 172.16.20.0 0.0.0.3 area 0
+network 192.168.10.0 0.0.0.255 area 0
+network 192.168.20.0 0.0.0.255 area 0
+!
+ip http server
+ip http secure-server
+ip route 0.0.0.0 0.0.0.0 10.0.0.65
+!
+ip access-list standard 10
+ 10 permit 192.168.10.0 0.0.0.255
+ 20 permit 192.168.20.0 0.0.0.255
+!
+ip nat pool HQ-POOL 190.0.1.2 190.0.1.6 prefix-length 29
+ip nat inside source list 10 pool HQ-POOL overload
+!
+ip ftp username dubuntu
+ip ftp password 123456

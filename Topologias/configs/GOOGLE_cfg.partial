@@ -1,0 +1,37 @@
+int lo0
+ip add 172.16.4.1 255.255.255.255
+!
+int lo1
+ip add 8.8.8.8 255.255.255.255
+!
+int e0/1
+ip add 10.0.1.14 255.255.255.252
+!
+int e0/2
+ip add 10.0.2.14 255.255.255.252
+!
+int e0/3
+ip add 10.0.4.14 255.255.255.252
+!
+int e1/0
+ip add 10.0.3.14 255.255.255.252
+!
+router bgp 700
+bgp router-id interface lo0
+no bgp default ipv4-unicast 
+neighbor 10.0.1.13 remote-as 300
+neighbor 10.0.2.13 remote-as 400
+neighbor 10.0.3.13 remote-as 500
+neighbor 10.0.4.13 remote-as 600
+!
+address-family ipv4 unicast 
+network 8.8.8.8 mask 255.255.255.255
+neighbor 10.0.1.13 activate
+neighbor 10.0.1.13 next-hop-self
+neighbor 10.0.2.13 activate
+neighbor 10.0.2.13 next-hop-self
+neighbor 10.0.3.13 activate
+neighbor 10.0.3.13 next-hop-self
+neighbor 10.0.4.13 activate
+neighbor 10.0.4.13 next-hop-self
+!

@@ -1,3 +1,5 @@
+vtp mode transparent
+!
 vlan 5
 vlan 15
 !

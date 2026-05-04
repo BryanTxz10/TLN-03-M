@@ -30,6 +30,7 @@ interface Ethernet1/3
 !
 router ospf 10
  router-id 172.16.1.1
+ prefix-suppression
  network 10.0.0.4 0.0.0.3 area 0
  network 10.0.0.8 0.0.0.3 area 0
  network 10.0.0.12 0.0.0.3 area 0

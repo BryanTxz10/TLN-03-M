@@ -4,33 +4,44 @@ interface Loopback0
 !
 interface Ethernet0/1
  ip address 10.0.0.34 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet0/2
  ip address 10.0.0.46 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet0/3
  ip address 10.0.0.49 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet1/0
  ip address 10.0.0.53 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet1/1
- no ip address
- shutdown
+ ip add 10.0.4.2 255.255.255.252
 !
 interface Ethernet1/2
  no ip address
  shutdown
 !
 interface Ethernet1/3
- no ip address
- shutdown
+ ip add 10.0.3.2 255.255.255.252
 !
-router rip
- version 2
- network 10.0.0.0
- network 172.16.0.0
- no auto-summary
+!router rip
+! version 2
+! network 10.0.0.0
+! network 172.16.0.0
+! no auto-summary
+!
+router ospf 1 
+ router-id 172.16.2.2
+ prefix-suppression
+ network 172.16.2.2 0.0.0.0 area 0
+ network 10.0.0.32 0.0.0.3 area 0
+ network 10.0.0.44 0.0.0.3 area 0
+ network 10.0.0.48 0.0.0.3 area 0
+ network 10.0.0.52 0.0.0.3 area 0
 !
 router bgp 200
  bgp router-id 172.16.2.2
@@ -44,13 +55,36 @@ router bgp 200
  neighbor 172.16.2.4 update-source Loopback0
  neighbor 172.16.2.5 remote-as 200
  neighbor 172.16.2.5 update-source Loopback0
+ neighbor 10.0.4.1 remote-as 600
+ neighbor 10.0.3.1 remote-as 500
  !
  address-family ipv4
   neighbor 172.16.2.1 activate
+  neighbor 172.16.2.1 next-hop-self
   neighbor 172.16.2.3 activate
+  neighbor 172.16.2.3 next-hop-self
   neighbor 172.16.2.4 activate
+  neighbor 172.16.2.4 next-hop-self
   neighbor 172.16.2.5 activate
+  neighbor 172.16.2.5 next-hop-self
+  neighbor 10.0.4.1 activate
+  neighbor 10.0.4.1 route-map RM-PUB-CLARO out
+  neighbor 10.0.4.1 route-map RM-EXTERNOS in
+  neighbor 10.0.3.1 activate
+  neighbor 10.0.3.1 route-map RM-PUB-CLARO out
+  neighbor 10.0.3.1 route-map RM-EXTERNOS in
  exit-address-family
+!
+ip prefix-list PL-EXTERNOS seq 5 deny 190.0.0.0/29
+ip prefix-list PL-EXTERNOS seq 10 deny 190.0.1.0/29
+ip prefix-list PL-EXTERNOS seq 15 permit 0.0.0.0/0 le 32
+ip prefix-list PL-PUB-CLARO seq 5 permit 190.0.0.0/29
+ip prefix-list PL-PUB-CLARO seq 10 permit 190.0.1.0/29
+!
+route-map RM-PUB-CLARO permit 10 
+ match ip address prefix-list PL-PUB-CLARO
+route-map RM-EXTERNOS permit 10 
+ match ip address prefix-list PL-EXTERNOS
 !
 ip forward-protocol nd
 !

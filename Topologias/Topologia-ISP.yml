@@ -5,13 +5,17 @@ topology:
 
     #########################################
     #    Head Quarter (Oficina Principal)
-    #
     #########################################
 
     CPE-HQ:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/CPE_HQ_cfg.partial
+
+    CPE-HQ-BK:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/CPE_HQ_BK_cfg.partial
 
     SW-PISO1:
       kind: cisco_iol
@@ -28,22 +32,33 @@ topology:
     PC1-VLAN10:
       kind: linux
       image: alpine:3.23
+      exec:
+        - ip add add 192.168.10.10/24 dev eth1
+        - ip route replace default via 192.168.10.1 dev eth1
 
     PC2-VLAN10:
       kind: linux
       image: alpine:3.23
+      exec:
+        - ip add add 192.168.10.20/24 dev eth1
+        - ip route replace default via 192.168.10.1 dev eth1
 
     PC3-VLAN20:
       kind: linux
       image: alpine:3.23
+      exec:
+        - ip add add 192.168.20.10/24 dev eth1
+        - ip route replace default via 192.168.20.1 dev eth1
 
     PC4-VLAN20:
       kind: linux
       image: alpine:3.23
+      exec:
+          - ip add add 192.168.20.20/24 dev eth1
+          - ip route replace default via 192.168.20.1 dev eth1
 
     #########################################
     #    Movistar (AS 100)
-    #
     #########################################
     M1:
       kind: cisco_iol
@@ -67,12 +82,16 @@ topology:
 
     #########################################
     #    Branch Office (Oficina Remota)
-    #
     #########################################
     CPE-BRANCH:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/CPE_BRANCH_cfg.partial
+    
+    CPE-BRANCH-BK:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/CPE_BRANCH_BK_cfg.partial
 
     SW-R-PISO1:
       kind: cisco_iol
@@ -89,22 +108,33 @@ topology:
     PC1-R-VLAN5:
       kind: linux
       image: alpine:3.23
+      exec:
+        - ip add add 192.168.5.10/24 dev eth1
+        - ip route replace default via 192.168.5.1 dev eth1
 
     PC2-R-VLAN5:
       kind: linux
       image: alpine:3.23
+      exec:
+        - ip add add 192.168.5.20/24 dev eth1
+        - ip route replace default via 192.168.5.1 dev eth1
 
     PC3-R-VLAN15:
       kind: linux
       image: alpine:3.23
+      exec:
+        - ip add add 192.168.15.10/24 dev eth1
+        - ip route replace default via 192.168.15.1 dev eth1
 
     PC4-R-VLAN15:
       kind: linux
       image: alpine:3.23
+      exec:
+        - ip add add 192.168.15.20/24 dev eth1
+        - ip route replace default via 192.168.15.1 dev eth1
 
     #########################################
     #    Claro (AS 200)
-    #
     #########################################
     C1:
       kind: cisco_iol
@@ -130,12 +160,122 @@ topology:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/C5_cfg.partial
+        
+    #########################################
+    #    Telxius (AS 10)
+    #########################################
+    T1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/T1_cfg.partial
 
+    T2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/T2_cfg.partial
+
+    T3:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/T3_cfg.partial
+
+    #########################################
+    #    ATT (AS 20)
+    #########################################
+    ATT1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/ATT1_cfg.partial
+
+    ATT2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/ATT2_cfg.partial
+
+    ATT3:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/ATT3_cfg.partial
+
+    #########################################
+    #    Orange (AS 30)
+    #########################################
+    OR1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/OR1_cfg.partial
+
+    OR2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/OR2_cfg.partial
+
+    OR3:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/OR3_cfg.partial
+
+    #########################################
+    #    Lumen (AS 40)
+    #########################################
+    LU1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/LU1_cfg.partial
+
+    LU2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/LU2_cfg.partial
+
+    LU3:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/LU3_cfg.partial
+
+    #########################################
+    #    Google (AS 1000)
+    #########################################
+    GOOGLE:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/GOOGLE_cfg.partial
+  
   links:
     #########################################
-    #
+    # Enlaces de Google
+    #########################################
+    - endpoints: [ "GOOGLE:e0/1", "T3:e0/1" ]
+    - endpoints: [ "GOOGLE:e0/2", "ATT3:e0/1" ]
+    - endpoints: [ "GOOGLE:e0/3", "OR3:e0/1" ]
+    - endpoints: [ "GOOGLE:e1/0", "LU3:e0/1" ]
+    
+    #########################################
+    # Enlaces en Telxius
+    #########################################
+    - endpoints: [ "T1:e0/2", "T2:e0/1" ]
+    - endpoints: [ "T2:e0/2", "T3:e0/2" ]
+
+    #########################################
+    # Enlaces en ATT
+    #########################################
+    - endpoints: [ "ATT1:e0/2", "ATT2:e0/1" ]
+    - endpoints: [ "ATT2:e0/2", "ATT3:e0/2" ]
+
+    #########################################
+    # Enlaces en Orange
+    #########################################
+    - endpoints: [ "OR1:e0/2", "OR2:e0/1" ]
+    - endpoints: [ "OR2:e0/2", "OR3:e0/2" ]
+
+    #########################################
+    # Enlaces en Lumen
+    #########################################
+    - endpoints: [ "LU1:e0/2", "LU2:e0/1" ]
+    - endpoints: [ "LU2:e0/2", "LU3:e0/2" ]
+
+    #########################################
     # Enlaces dentro del ISP Movistar
-    #
     #########################################
     - endpoints: [ "M1:e1/0", "CPE-HQ:e0/1" ]
     - endpoints: [ "M1:e0/1", "M2:e0/1" ]
@@ -143,6 +283,17 @@ topology:
     - endpoints: [ "M1:e0/3", "M4:e0/1" ]
     - endpoints: [ "M2:e0/2", "M4:e0/2" ]
     - endpoints: [ "M3:e0/2", "M4:e0/3" ]
+    - endpoints: [ "M3:e0/3", "CPE-BRANCH-BK:e0/1" ]
+
+    #########################################
+    # Enlaces dentro del ISP Movistar con Telxius
+    #########################################
+    - endpoints: [ "M2:e0/3", "T1:e0/1" ]
+    
+    #########################################
+    # Enlaces dentro del ISP Movistar con ATT
+    #########################################
+    - endpoints: [ "M2:e1/1", "ATT1:e0/1" ]
 
     #########################################
     #
@@ -159,11 +310,23 @@ topology:
     - endpoints: [ "C5:e0/3", "C3:e0/3" ]
     - endpoints: [ "C5:e0/1", "C2:e0/3" ]
     - endpoints: [ "C5:e1/0", "C1:e0/2" ]
+    - endpoints: [ "C5:e1/1", "CPE-HQ-BK:e0/1" ]
+
+    #########################################
+    # Enlaces dentro del ISP Claro con Orange
+    #########################################
+    - endpoints: [ "C2:e1/1", "OR1:e0/1" ]
+    
+    #########################################
+    # Enlaces dentro del ISP Claro con Lumen
+    #########################################
+    - endpoints: [ "C2:e1/3", "LU1:e0/1" ]
 
     #########################################
     # Enlaces dentro del Head Quarter
     #########################################
     - endpoints: [ "CPE-HQ:e0/2", "SW-PISO1:e0/1" ]
+    - endpoints: [ "CPE-HQ-BK:e0/2", "SW-PISO1:e1/1" ]
     - endpoints: [ "SW-PISO1:e0/2", "SW-PISO2:e0/1" ]
     - endpoints: [ "SW-PISO1:e0/3", "PC1-VLAN10:eth1" ]
     - endpoints: [ "SW-PISO1:e1/0", "PC2-VLAN10:eth1" ]
@@ -174,6 +337,7 @@ topology:
     # Enlaces dentro del Branch Office
     #########################################
     - endpoints: [ "CPE-BRANCH:e0/2", "SW-R-PISO1:e0/1" ]
+    - endpoints: [ "CPE-BRANCH-BK:e0/2", "SW-R-PISO1:e1/1" ]
     - endpoints: [ "SW-R-PISO1:e0/2", "SW-R-PISO2:e0/1" ]
     - endpoints: [ "SW-R-PISO1:e0/3", "PC1-R-VLAN5:eth1" ]
     - endpoints: [ "SW-R-PISO1:e1/0", "PC2-R-VLAN5:eth1" ]

@@ -17,33 +17,36 @@ interface Ethernet0/0
 !
 interface Ethernet0/1
  ip address 10.0.0.50 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet0/2
  ip address 10.0.0.38 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet0/3
  ip address 10.0.0.42 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet1/0
  ip address 10.0.0.57 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet1/1
- no ip address
- shutdown
+ ip address 10.0.0.65 255.255.255.252
 !
-interface Ethernet1/2
- no ip address
- shutdown
+!router rip
+! version 2
+! network 10.0.0.0
+! network 172.16.0.0
+! no auto-summary
 !
-interface Ethernet1/3
- no ip address
- shutdown
-!
-router rip
- version 2
- network 10.0.0.0
- network 172.16.0.0
- no auto-summary
+router ospf 1
+ router-id 172.16.2.5
+ prefix-suppression
+ network 172.16.2.5 0.0.0.0 area 0
+ network 10.0.0.36 0.0.0.3 area 0
+ network 10.0.0.40 0.0.0.3 area 0
+ network 10.0.0.56 0.0.0.3 area 0
 !
 router bgp 200
  bgp router-id 172.16.2.5
@@ -59,10 +62,15 @@ router bgp 200
  neighbor 172.16.2.4 update-source Loopback0
  !
  address-family ipv4
+  redistribute static route-map to_EXTERNAL
   neighbor 172.16.2.1 activate
+  neighbor 172.16.2.1 next-hop-self
   neighbor 172.16.2.2 activate
+  neighbor 172.16.2.2 next-hop-self
   neighbor 172.16.2.3 activate
+  neighbor 172.16.2.3 next-hop-self
   neighbor 172.16.2.4 activate
+  neighbor 172.16.2.4 next-hop-self
  exit-address-family
 !
 ip forward-protocol nd
@@ -70,52 +78,8 @@ ip forward-protocol nd
 !
 ip ftp username dubuntu
 ip ftp password 12345
-interface Ethernet0/3
- ip address 10.0.0.42 255.255.255.252
 !
-interface Ethernet1/0
- ip address 10.0.0.57 255.255.255.252
+ip route 190.0.1.0 255.255.255.248 10.0.0.66 tag 190
 !
-interface Ethernet1/1
- no ip address
- shutdown
-!
-interface Ethernet1/2
- no ip address
- shutdown
-!
-interface Ethernet1/3
- no ip address
- shutdown
-!
-router rip
- version 2
- network 10.0.0.0
- network 172.16.0.0
- no auto-summary
-!
-router bgp 200
- bgp router-id 172.16.2.5
- bgp log-neighbor-changes
- no bgp default ipv4-unicast
- neighbor 172.16.2.1 remote-as 200
- neighbor 172.16.2.1 update-source Loopback0
- neighbor 172.16.2.2 remote-as 200
- neighbor 172.16.2.2 update-source Loopback0
- neighbor 172.16.2.3 remote-as 200
- neighbor 172.16.2.3 update-source Loopback0
- neighbor 172.16.2.4 remote-as 200
- neighbor 172.16.2.4 update-source Loopback0
- !
- address-family ipv4
-  neighbor 172.16.2.1 activate
-  neighbor 172.16.2.2 activate
-  neighbor 172.16.2.3 activate
-  neighbor 172.16.2.4 activate
- exit-address-family
-!
-ip forward-protocol nd
-!
-!
-ip ftp username dubuntu
-ip ftp password 12345
+route-map to_EXTERNAL permit 10 
+ match tag 190
