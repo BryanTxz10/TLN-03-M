@@ -1,4 +1,4 @@
-hostname SW-PISO2
+hostname CPE-BRANCH-BACK
 !
 no aaa new-model
 !
@@ -21,21 +21,16 @@ vrf definition clab-mgmt
 !
 interface Ethernet0/0
 
- no switchport
-
  vrf forwarding clab-mgmt
  description clab-mgmt
- ip address 172.20.20.6 255.255.255.0
- ipv6 address 3fff:172:20:20::a/64
+ ip address 172.20.20.12 255.255.255.0
+ ipv6 address 3fff:172:20:20::f/64
  no shutdown
 !
 interface Ethernet0/1
  no shutdown
 !
 interface Ethernet0/2
- no shutdown
-!
-interface Ethernet0/3
  no shutdown
 !
 ip forward-protocol nd
@@ -50,16 +45,15 @@ line vty 0 4
  login local
  transport input ssh
 !
-
 !
-! Last configuration change at 05:02:20 UTC Sat Apr 25 2026 by admin
+! Last configuration change at 16:35:50 UTC Sat Apr 25 2026 by admin
 !
 version 17.12
 service timestamps debug datetime msec
 service timestamps log datetime msec
 !
-hostname SW-PISO2
-!
+hostname CPE-BRANCH-BACK
+!         
 boot-start-marker
 boot-end-marker
 !
@@ -69,7 +63,7 @@ vrf definition clab-mgmt
  !
  address-family ipv4
  exit-address-family
- !
+ !        
  address-family ipv6
  exit-address-family
 !
@@ -79,6 +73,7 @@ no aaa new-model
 !
 !
 !
+!         
 !
 !
 !
@@ -86,12 +81,9 @@ no aaa new-model
 !
 !
 !
-!
-ip audit notify log
-ip audit po max-events 100
 no ip domain lookup
 ip domain name lab
-ip cef
+ip cef    
 login on-success log
 ipv6 unicast-routing
 ipv6 cef
@@ -101,22 +93,37 @@ ipv6 cef
 !
 !
 !
+!         
 !
-vtp version 1
 multilink bundle-name authenticated
 !
 !
 !
 !
-memory free low-watermark processor 54375
 !
+memory free low-watermark processor 55011
 !
+!         
 spanning-tree mode rapid-pvst
-spanning-tree extend system-id
 !
-username admin privilege 15 secret 9 $9$VXLtmGDq8ZNLDk$fU1v0BkRUiCyfOzC1wYHnIphA6.m9rEwV1eT064eE7A
 !
-vlan internal allocation policy ascending
+username admin privilege 15 secret 9 $9$fb31ITIP6v3zE.$0rSga/7DbrhP8yAbbiOnkjoW5BHf6J2NNf8gA4o93co
+!
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!         
 !
 !
 !
@@ -124,36 +131,50 @@ vlan internal allocation policy ascending
 !
 interface Ethernet0/0
  description clab-mgmt
- no switchport
  vrf forwarding clab-mgmt
- ip address 172.20.20.6 255.255.255.0
- ipv6 address 3FFF:172:20:20::7/64
+ ip address 172.20.20.12 255.255.255.0
+ ipv6 address 3FFF:172:20:20::4/64
 !
 interface Ethernet0/1
- switchport trunk encapsulation dot1q
- switchport trunk allowed vlan 10,20
- switchport mode trunk
+ ip address 10.0.0.62 255.255.255.252
 !
 interface Ethernet0/2
- switchport access vlan 20
- switchport mode access
+ no ip address
+ shutdown
 !
 interface Ethernet0/3
- switchport access vlan 20
- switchport mode access
+ no ip address
+ shutdown
+!
+router bgp 65002
+ bgp router-id 192.168.20.254
+ bgp log-neighbor-changes
+ neighbor 10.0.0.61 remote-as 200
+ neighbor 10.0.0.61 description PE-C1-CLARO-RESPALDO
+ !
+ address-family ipv4
+  network 10.0.0.60 mask 255.255.255.252
+  neighbor 10.0.0.61 activate
+  neighbor 10.0.0.61 route-map RM-IN-CLARO-BACKUP in
+  neighbor 10.0.0.61 route-map RM-OUT-CLARO-BACKUP out
+ exit-address-family
 !
 ip forward-protocol nd
 !
 !
-ip ftp username dubuntu
-ip ftp password 123456
 ip http server
 ip http secure-server
-ip ssh bulk-mode 131072
 ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
-!
+ip ssh bulk-mode 131072
 !
 ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
+!
+route-map RM-IN-CLARO-BACKUP permit 10 
+ set local-preference 100
+!
+route-map RM-OUT-CLARO-BACKUP permit 10 
+ set metric 50
+ set as-path prepend 65002 65002 65002
 !
 !
 !
@@ -170,6 +191,8 @@ line vty 0 4
  transport input ssh
 !
 !
-end
+!
+!
+end    
 
 end

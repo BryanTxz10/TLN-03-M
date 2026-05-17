@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 02:50:27 UTC Sat Apr 25 2026 by admin
+! Last configuration change at 06:39:07 UTC Sat Apr 25 2026 by admin
 !
 version 17.12
 service timestamps debug datetime msec
@@ -126,6 +126,7 @@ interface Ethernet0/0
  vrf forwarding clab-mgmt
  ip address 172.20.20.16 255.255.255.0
  ipv6 address 3FFF:172:20:20::10/64
+ ipv6 address 3FFF:172:20:20::13/64
 !
 interface Ethernet0/1
  ip address 10.0.0.73 255.255.255.252
@@ -143,7 +144,7 @@ router bgp 65002
  bgp log-neighbor-changes
  network 10.0.0.72 mask 255.255.255.252
  neighbor 10.0.0.74 remote-as 100
- neighbor 10.0.0.74 description PE-M1-MOVISTAR-PRINCIPAL
+ neighbor 10.0.0.74 description PE-M3-MOVISTAR-PRINCIPAL
  neighbor 10.0.0.74 route-map RM-IN-MOVISTAR in
  neighbor 10.0.0.74 route-map RM-OUT-MOVISTAR out
 !

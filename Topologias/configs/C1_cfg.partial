@@ -1,13 +1,12 @@
-
 !
-! Last configuration change at 08:28:30 UTC Fri Apr 24 2026 by admin
+! Last configuration change at 16:29:17 UTC Sat Apr 25 2026 by admin
 !
 version 17.12
 service timestamps debug datetime msec
 service timestamps log datetime msec
 !
 hostname C1
-!
+!         
 boot-start-marker
 boot-end-marker
 !
@@ -17,7 +16,7 @@ vrf definition clab-mgmt
  !
  address-family ipv4
  exit-address-family
- !
+ !        
  address-family ipv6
  exit-address-family
 !
@@ -27,7 +26,7 @@ no aaa new-model
 !
 !
 !
-!
+!         
 !
 !
 !
@@ -37,7 +36,7 @@ no aaa new-model
 !
 no ip domain lookup
 ip domain name lab
-ip cef
+ip cef    
 login on-success log
 ipv6 unicast-routing
 ipv6 cef
@@ -47,7 +46,7 @@ ipv6 cef
 !
 !
 !
-!
+!         
 !
 multilink bundle-name authenticated
 !
@@ -87,7 +86,7 @@ crypto pki certificate chain TP-self-signed-2
   20FF8651 7B861F7B 3AC0D8C3 A4A6CD94 F8C8BC2C 9CA98629 111E4590 CA6AA957 
   5C0D241D 873669B3 0F80A4CD 72AA20A2 CEF83BAC 36F4AC4F BEF5752B F7F9A7FB 
   7AD7E3FF F4D91E03 5DFB15C0 1C2C99D5 78AEC71E EEDB93CC 2209D822 FF90668A 3DDD
-  	quit
+        quit
 !
 !
 memory free low-watermark processor 55011
@@ -97,7 +96,7 @@ spanning-tree mode rapid-pvst
 !
 !
 username admin privilege 15 secret 9 $9$K1iuaeDwDDRs1k$fA7/9dxJiODT66YZdoW.vevc2cMnGHEkceMwrEFf8Yg
-!
+!         
 !
 !
 !
@@ -107,6 +106,7 @@ username admin privilege 15 secret 9 $9$K1iuaeDwDDRs1k$fA7/9dxJiODT66YZdoW.vevc2
 !
 !
 !
+!         
 !
 !
 !
@@ -116,8 +116,7 @@ username admin privilege 15 secret 9 $9$K1iuaeDwDDRs1k$fA7/9dxJiODT66YZdoW.vevc2
 !
 !
 !
-!
-!
+!         
 interface Loopback0
  ip address 172.16.2.1 255.255.255.255
 !
@@ -126,7 +125,8 @@ interface Ethernet0/0
  vrf forwarding clab-mgmt
  ip address 172.20.20.7 255.255.255.0
  ipv6 address 3FFF:172:20:20::7/64
-!
+ ipv6 address 3FFF:172:20:20::13/64
+!         
 interface Ethernet0/1
  ip address 10.0.0.54 255.255.255.252
 !
@@ -146,7 +146,7 @@ interface Ethernet1/1
 interface Ethernet1/2
  no ip address
  shutdown
-!
+!         
 interface Ethernet1/3
  no ip address
  shutdown
@@ -164,26 +164,21 @@ router ospf 1
 router bgp 200
  bgp router-id 172.16.2.1
  bgp log-neighbor-changes
- no bgp default ipv4-unicast
- neighbor 172.16.2.2 remote-as 200
- neighbor 172.16.2.2 update-source Loopback0
+ neighbor 10.0.0.62 remote-as 65002
+ neighbor 10.0.0.62 description eBGP-CPE-BRANCH-BACKUP
  neighbor 172.16.2.3 remote-as 200
+ neighbor 172.16.2.3 description RR-PRIMARIO-C3
  neighbor 172.16.2.3 update-source Loopback0
  neighbor 172.16.2.4 remote-as 200
+ neighbor 172.16.2.4 description RR-SECUNDARIO-C4
  neighbor 172.16.2.4 update-source Loopback0
- neighbor 172.16.2.5 remote-as 200
- neighbor 172.16.2.5 update-source Loopback0
  !
  address-family ipv4
-  redistribute static route-map to_EXTERNAL
-  neighbor 172.16.2.2 activate
-  neighbor 172.16.2.2 next-hop-self
+  neighbor 10.0.0.62 activate
   neighbor 172.16.2.3 activate
   neighbor 172.16.2.3 next-hop-self
   neighbor 172.16.2.4 activate
   neighbor 172.16.2.4 next-hop-self
-  neighbor 172.16.2.5 activate
-  neighbor 172.16.2.5 next-hop-self
  exit-address-family
 !
 ip forward-protocol nd
@@ -201,7 +196,7 @@ ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
 !
 route-map to_EXTERNAL permit 10 
  match tag 190
-!
+!         
 !
 !
 !

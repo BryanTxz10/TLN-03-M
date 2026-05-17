@@ -1,6 +1,53 @@
+hostname CPE-BRANCH
+!
+no aaa new-model
+!
+ip domain name lab
+!
+ip cef
+!
+ipv6 unicast-routing
+!
+no ip domain lookup
+!
+username admin privilege 15 secret admin
+!
+vrf definition clab-mgmt
+ description clab-mgmt
+ address-family ipv4
+ !
+ address-family ipv6
+ !
+!
+interface Ethernet0/0
+
+ vrf forwarding clab-mgmt
+ description clab-mgmt
+ ip address 172.20.20.11 255.255.255.0
+ ipv6 address 3fff:172:20:20::e/64
+ no shutdown
+!
+interface Ethernet0/1
+ no shutdown
+!
+interface Ethernet0/2
+ no shutdown
+!
+ip forward-protocol nd
+!
+ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
+ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3fff:172:20:20::1
+!
+ip ssh version 2
+crypto key generate rsa modulus 2048
+!
+line vty 0 4
+ login local
+ transport input ssh
+!
 
 !
-! Last configuration change at 02:50:27 UTC Sat Apr 25 2026 by admin
+! Last configuration change at 06:39:07 UTC Sat Apr 25 2026 by admin
 !
 version 17.12
 service timestamps debug datetime msec
@@ -87,7 +134,7 @@ crypto pki certificate chain TP-self-signed-7
   D07D8019 EAC2C5E7 AC32758E 867961FA DE0ADE31 A0F0BA45 6295BB2D 784E3E6A 
   BE4C507C 5AA49EDF 1777586F 3FBF3141 4BF9FF81 DA05696E 6AD22616 81E036B4 
   53A01F30 70ED9697 D15C650F BA11D6E3 BFD0C630 CAF40B2A C9EA5314 DAB0A689 3FB8
-  	quit
+        quit
 !
 !
 memory free low-watermark processor 55011
@@ -126,6 +173,7 @@ interface Ethernet0/0
  vrf forwarding clab-mgmt
  ip address 172.20.20.16 255.255.255.0
  ipv6 address 3FFF:172:20:20::10/64
+ ipv6 address 3FFF:172:20:20::13/64
 !
 interface Ethernet0/1
  ip address 10.0.0.73 255.255.255.252
@@ -143,7 +191,7 @@ router bgp 65002
  bgp log-neighbor-changes
  network 10.0.0.72 mask 255.255.255.252
  neighbor 10.0.0.74 remote-as 100
- neighbor 10.0.0.74 description PE-M1-MOVISTAR-PRINCIPAL
+ neighbor 10.0.0.74 description PE-M3-MOVISTAR-PRINCIPAL
  neighbor 10.0.0.74 route-map RM-IN-MOVISTAR in
  neighbor 10.0.0.74 route-map RM-OUT-MOVISTAR out
 !
@@ -183,4 +231,6 @@ line vty 0 4
 !
 !
 !
+end
+
 end
