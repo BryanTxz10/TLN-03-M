@@ -1,0 +1,36 @@
+int lo0
+ip add 172.16.6.3 255.255.255.255
+!
+int e0/1
+ip add 10.0.4.13 255.255.255.252
+ip ospf network point-to-point
+!
+int e0/2
+ip add 10.0.4.10 255.255.255.252
+ip ospf network point-to-point
+!
+router ospf 1
+router-id 172.16.6.3
+prefix-suppression
+network 172.16.6.3 0.0.0.0 area 0
+network 10.0.4.8 0.0.0.3 area 0
+!
+router bgp 600
+bgp router-id interface Loopback0
+no bgp default ipv4-unicast 
+!
+neighbor 172.16.6.1 remote-as 600
+neighbor 172.16.6.1 update-source Loopback0
+neighbor 172.16.6.2 remote-as 600
+neighbor 172.16.6.2 update-source Loopback0
+neighbor 10.0.4.14 remote-as 700
+!
+address-family ipv4 unicast 
+neighbor 172.16.6.1 activate
+neighbor 172.16.6.1 next-hop-self
+neighbor 172.16.6.2 activate
+neighbor 172.16.6.2 next-hop-self
+neighbor 10.0.4.14 activate
+neighbor 10.0.4.14 next-hop-self
+!
+

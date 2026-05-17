@@ -1,0 +1,18 @@
+name: lab-iol-2r
+
+topology:
+  nodes:
+    R1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/R1.cfg
+
+    R2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      startup-config: configs/R2.cfg
+
+  links:
+    - endpoints:
+        - "R1:e0/1"
+        - "R2:e0/1"

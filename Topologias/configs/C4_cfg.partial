@@ -130,21 +130,28 @@ interface Ethernet0/0
 !
 interface Ethernet0/1
  ip address 10.0.0.45 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet0/2
  ip address 10.0.0.30 255.255.255.252
 !
 interface Ethernet0/3
  ip address 10.0.0.37 255.255.255.252
+ ip ospf network point-to-point
+!
+!router rip
+! version 2
+! network 10.0.0.0
+! network 172.16.0.0
+! no auto-summary
 !
 router ospf 1
  router-id 172.16.2.4
- passive-interface default
- no passive-interface Ethernet0/1
- no passive-interface Ethernet0/3
+ prefix-suppression
+ network 172.16.2.4 0.0.0.0 area 0
  network 10.0.0.36 0.0.0.3 area 0
  network 10.0.0.44 0.0.0.3 area 0
- network 172.16.2.4 0.0.0.0 area 0
+ network 10.0.0.36 0.0.0.3 area 0
 !
 router bgp 200
  bgp router-id 172.16.2.4
@@ -164,18 +171,29 @@ router bgp 200
  neighbor 172.16.2.5 update-source Loopback0
  !
  address-family ipv4
+  neighbor 10.0.0.29 activate
+  neighbor 10.0.0.29 route-map RM-PUB-CLARO  out
+  neighbor 10.0.0.29 route-map RM-EXTERNOS in
   neighbor 172.16.2.1 activate
-  neighbor 172.16.2.1 route-reflector-client
   neighbor 172.16.2.1 next-hop-self
   neighbor 172.16.2.2 activate
-  neighbor 172.16.2.2 route-reflector-client
   neighbor 172.16.2.2 next-hop-self
   neighbor 172.16.2.3 activate
   neighbor 172.16.2.3 next-hop-self
   neighbor 172.16.2.5 activate
-  neighbor 172.16.2.5 route-reflector-client
   neighbor 172.16.2.5 next-hop-self
  exit-address-family
+!
+ip prefix-list PL-EXTERNOS seq 5 deny 190.0.0.0/29
+ip prefix-list PL-EXTERNOS seq 10 deny 190.0.1.0/29
+ip prefix-list PL-EXTERNOS seq 15 permit 0.0.0.0/0 le 32
+ip prefix-list PL-PUB-CLARO seq 5 permit 190.0.0.0/29
+ip prefix-list PL-PUB-CLARO seq 10 permit 190.0.1.0/29
+!
+route-map RM-PUB-CLARO permit 10 
+ match ip address prefix-list PL-PUB-CLARO
+route-map RM-EXTERNOS permit 10 
+ match ip address prefix-list PL-EXTERNOS
 !
 ip forward-protocol nd
 !

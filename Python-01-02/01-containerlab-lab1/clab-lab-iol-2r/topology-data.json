@@ -1,0 +1,101 @@
+{
+  "name": "lab-iol-2r",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-c05173fefd3d",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "3fff:172:20:20::1",
+        "external-access": true
+      }
+    }
+  },
+  "ssh-pub-keys": ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIzCBgj4IgN0kNtfAEOzmK+McvBE08uTj9lNlu0gnc8q"],
+  "nodes": {
+    "R1": {
+      "index": "0",
+      "shortname": "R1",
+      "longname": "clab-lab-iol-2r-R1",
+      "fqdn": "R1.lab-iol-2r.io",
+      "group": "",
+      "labdir": "/home/dubuntu/Documents/python-personal/01-containerlab-lab1/clab-lab-iol-2r/R1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.2",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::2",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-c05173fefd3d",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/dubuntu/Documents/python-personal/01-containerlab-lab1/clab-lab-iol-2r/R1",
+        "clab-node-longname": "clab-lab-iol-2r-R1",
+        "clab-node-name": "R1",
+        "clab-node-type": "",
+        "clab-owner": "dubuntu",
+        "clab-topo-file": "/home/dubuntu/Documents/python-personal/01-containerlab-lab1/01-cisco-ssh-dos-routers.yml",
+        "containerlab": "lab-iol-2r"
+      },
+      "port-bindings": [
+      ]
+    },
+    "R2": {
+      "index": "1",
+      "shortname": "R2",
+      "longname": "clab-lab-iol-2r-R2",
+      "fqdn": "R2.lab-iol-2r.io",
+      "group": "",
+      "labdir": "/home/dubuntu/Documents/python-personal/01-containerlab-lab1/clab-lab-iol-2r/R2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.3",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::3",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-c05173fefd3d",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/dubuntu/Documents/python-personal/01-containerlab-lab1/clab-lab-iol-2r/R2",
+        "clab-node-longname": "clab-lab-iol-2r-R2",
+        "clab-node-name": "R2",
+        "clab-node-type": "",
+        "clab-owner": "dubuntu",
+        "clab-topo-file": "/home/dubuntu/Documents/python-personal/01-containerlab-lab1/01-cisco-ssh-dos-routers.yml",
+        "containerlab": "lab-iol-2r"
+      },
+      "port-bindings": [
+      ]
+    }
+  },
+  "links": [
+    {
+      "endpoints": {
+        "a": {
+          "node": "R1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:30:30:77",
+          "peer": "z"
+        },
+        "z": {
+          "node": "R2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:c5:f6:79",
+          "peer": "a"
+        }
+      }
+    }
+  ]
+}

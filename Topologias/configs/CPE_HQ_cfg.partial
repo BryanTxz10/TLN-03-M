@@ -1,167 +1,19 @@
-hostname CPE-HQ
-!
-no aaa new-model
-!
-ip domain name lab
-!
-ip cef
-!
-ipv6 unicast-routing
-!
-no ip domain lookup
-!
-username admin privilege 15 secret admin
-!
-vrf definition clab-mgmt
- description clab-mgmt
- address-family ipv4
- !
- address-family ipv6
- !
-!
-interface Ethernet0/0
-
- vrf forwarding clab-mgmt
- description clab-mgmt
- ip address 172.20.20.3 255.255.255.0
- ipv6 address 3fff:172:20:20::4/64
- no shutdown
-!
-interface Ethernet0/1
- no shutdown
-!
-interface Ethernet0/2
- no shutdown
-!
-ip forward-protocol nd
-!
-ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
-ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3fff:172:20:20::1
-!
-ip ssh version 2
-crypto key generate rsa modulus 2048
-!
-line vty 0 4
- login local
- transport input ssh
-!
-
-!
-version 17.12
-service timestamps debug datetime msec
-service timestamps log datetime msec
-!
-hostname CPE-HQ
-!
-boot-start-marker
-boot-end-marker
-!
-!
-vrf definition clab-mgmt
- description clab-mgmt
- !
- address-family ipv4
- exit-address-family
- !
- address-family ipv6
- exit-address-family
-!
-no aaa new-model
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-no ip domain lookup
-ip domain name lab
-ip cef
-login on-success log
-ipv6 unicast-routing
-ipv6 cef
-!
-!
-!
-!
-!
-!
-!
-!
-multilink bundle-name authenticated
-!
-!
-crypto pki trustpoint TP-self-signed-9
- enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-9
- revocation-check none
- rsakeypair TP-self-signed-9
- hash sha256
-!
-!
-crypto pki certificate chain TP-self-signed-9
- certificate self-signed 01
-  3082031E 30820206 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
-  28312630 24060355 04030C1D 494F532D 53656C66 2D536967 6E65642D 43657274 
-  69666963 6174652D 39301E17 0D323630 34323530 31323035 335A170D 33363034 
-  32343031 32303533 5A302831 26302406 03550403 0C1D494F 532D5365 6C662D53 
-  69676E65 642D4365 72746966 69636174 652D3930 82012230 0D06092A 864886F7 
-  0D010101 05000382 010F0030 82010A02 82010100 C75BC8AC 6CAC60C4 D9181157 
-  E5C08495 958CE845 BC09224F 01789D92 378026CC CE297E8A C3B20636 A77CFC28 
-  8AB50430 C850E995 8B1F3B51 C46CAF57 72B5E34F B5AA0713 2620E8FD 5D2ADFB5 
-  80483EBE D4DABBBC B87ADE45 53BE0769 0BA1DABC E87FA04F DE31B5F5 35CE0E7F 
-  4B537FAF 26783AC1 10F9A8FF 21942209 181B9600 6F8E20E8 0EC95674 2DE89CDF 
-  4225D078 F9FC9477 628E2FB9 D3474EC7 AB5FFE29 11678AF3 70EF683D A20FE47E 
-  BFA80EF2 9EDBABEA 8A6FD166 C51FBDAC 9A8BFCEA 493FEE38 2AFF7A50 174D6F81 
-  7B1E47C9 4E8330E9 06CB6822 9D578751 9AE22DC5 AF64851C D9E205EA 75D503B7 
-  4BF324ED 5A40CC9E 10AFA41E C2B0B854 B96A0393 02030100 01A35330 51301D06 
-  03551D0E 04160414 98E1EFA8 398CE8DF D41E14D3 7CA875CD BA5EDDB0 301F0603 
-  551D2304 18301680 1498E1EF A8398CE8 DFD41E14 D37CA875 CDBA5EDD B0300F06 
-  03551D13 0101FF04 05300301 01FF300D 06092A86 4886F70D 01010B05 00038201 
-  0100826E 00264984 56ED1018 8AF4F1F7 967C8410 F7DBF8F1 2424878C F4620139 
-  30579D46 165F2B98 A7BBDDFF B1EDC879 4A98749D EED1E3B1 5CDB13A9 6D96F8A1 
-  FEFD37B8 CC45CB7C 065787FB 30A9C93A 9CBB19AC 73A7A83C E5BFA16E B60FC3E7 
-  41D3C41F 0236F458 F9543B23 8C611315 24294B39 772A5BBC 4F8AD942 6EF4CD57 
-  8528F3A2 F8C5AD33 EEB8ED4F AFA477CC 162B57E9 9D48DA7D 0CC02341 00409942 
-  0B681BE5 EF7CBE7C 120EE075 B7BBF2B2 F3350EA6 9A886E1B 087B5B75 1D309294 
-  071B1A99 926116E0 0B187376 0B48A7CF 4BAB4E2C A720A71D 4853613F FCE3CF98 
-  5EF18343 90AFFCAF F0B2ECFF 3CA3A4F0 6A55644B 06CC4AA3 50BDE26E B24AD597 1769
-        quit
-!
-!
-memory free low-watermark processor 55011
-!
-!
-spanning-tree mode rapid-pvst
-!
-!
-username admin privilege 15 secret 9 $9$t1JbwM1yfRP7Nk$l8eGb9VmBvI2zfDxYeWnPtsjvK.zXV4v86eH9liWw0A
-!
-!
-!
-!
-!
-! 
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
+track 5 ip route 192.168.5.0 255.255.255.0 reachability
+track 15 ip route 192.168.15.0 255.255.255.0 reachability
+!
+crypto isakmp policy 10
+ encr aes
+ hash md5
+ authentication pre-share
+ group 5
+ lifetime 1000
+crypto isakmp key TLN03 address 190.0.0.1
+!
+crypto ipsec transform-set TS-TO-BRANCH esp-3des esp-md5-hmac 
+ mode transport
+!
+crypto ipsec profile PF-TO-BRANCH
+ set transform-set TS-TO-BRANCH
 !
 interface Loopback0
  ip address 192.168.1.254 255.255.255.255
@@ -174,24 +26,49 @@ interface Ethernet0/0
  ipv6 address 3FFF:172:20:20::11/64
 !
 interface Ethernet0/1
- ip address 10.0.0.21 255.255.255.252
+ ip address 10.0.0.2 255.255.255.252
+ ip nat outside
 !
 interface Ethernet0/2
- no ip address
- shutdown
+ no ip address 
+ no shutdown
 !
-interface Ethernet0/3
- no ip address
- shutdown
+interface Ethernet0/2.10
+ encapsulation dot1q 10
+ ip address 192.168.10.2 255.255.255.0
+ ip nat inside
+ vrrp 10 ip 192.168.10.1
+ vrrp 10 preempt
+ vrrp 10 track 5
+ vrrp 10 track 15
+ no shutdown
 !
-router bgp 65001
- bgp router-id 192.168.1.254
- bgp log-neighbor-changes
- network 10.0.0.20 mask 255.255.255.252
- neighbor 10.0.0.22 remote-as 100
- neighbor 10.0.0.22 description PE-M1-MOVISTAR-PRINCIPAL
- neighbor 10.0.0.22 route-map RM-IN-MOVISTAR in
- neighbor 10.0.0.22 route-map RM-OUT-MOVISTAR out
+interface Ethernet0/2.20
+ encapsulation dot1q 20
+ ip address 192.168.20.2 255.255.255.0
+ ip nat inside
+ vrrp 20 ip 192.168.20.1
+ vrrp 20 preempt
+ vrrp 20 track 5
+ vrrp 20 track 15
+ no shutdown
+!
+interface Tunnel1
+ ip address 172.16.10.1 255.255.255.252
+ tunnel source 200.0.0.1
+ tunnel destination 190.0.0.1
+ ip ospf hello-interval 5
+ ip ospf dead-interval 20
+ tunnel protection ipsec profile PF-TO-BRANCH
+
+!
+router ospf 10
+router-id 1.1.1.1
+network 172.16.10.0 0.0.0.3 area 0
+passive-interface ethernet0/2.10
+passive-interface ethernet0/2.20
+network 192.168.10.0 0.0.0.255 area 0
+network 192.168.20.0 0.0.0.255 area 0
 !
 ip forward-protocol nd
 !
@@ -201,32 +78,13 @@ ip ftp password 123456
 ip http server
 ip http secure-server
 ip route 0.0.0.0 0.0.0.0 10.0.0.1
-ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
-ip ssh bulk-mode 131072
 !
-ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
+ip access-list standard 10
+ 10 permit 192.168.10.0 0.0.0.255
+ 20 permit 192.168.20.0 0.0.0.255
 !
-route-map RM-OUT-MOVISTAR permit 10 
- set metric 10
+ip nat pool HQ-POOL 200.0.0.2 200.0.0.6 prefix-length 29
+ip nat inside source list 10 pool HQ-POOL overload
 !
-route-map RM-IN-MOVISTAR permit 10 
- set local-preference 200
-!
-!
-!
-!
-control-plane
-!
-!
-!
-line con 0
- logging synchronous
-line aux 0
-line vty 0 4
- login local
- transport input ssh
-!
-!
-!
-!
-end
+ip ftp username dubuntu
+ip ftp password 123456
