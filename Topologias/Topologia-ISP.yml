@@ -2,26 +2,7 @@ name: ISP-TDP-CLARO-IOL
 
 topology:
   nodes:
-  
-    ############################################
-    #                  AS300                   #
-    ############################################
 
-    AS300:
-      kind: cisco_iol
-      image: vrnetlab/cisco_iol:17.12.1
-      startup-config: configs/R-AS300_cfg.partial
-      mgmt-ipv4: 172.20.20.2
-
-    PC1-INTERNET:
-      kind: linux
-      image: alpine:3.23
-      binds:
-        - configs/internet.html:/usr/share/nginx/html/internet.html
-      exec:
-        - ip addr add 8.8.8.8/24 dev eth1
-        - ip route del default
-        - ip route add default via 8.8.8.1
     #########################################
     #    Head Quarter (Oficina Principal)
     #########################################
@@ -30,7 +11,6 @@ topology:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/CPE_HQ_cfg.partial
-      mgmt-ipv4: 172.20.20.3
 
     CPE-HQ-BK:
       kind: cisco_iol
@@ -42,13 +22,13 @@ topology:
       image: vrnetlab/cisco_iol:L2-17.12.1
       type: l2
       startup-config: configs/SW-PISO1_cfg.partial
-      mgmt-ipv4: 172.20.20.5
+
     SW-PISO2:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:L2-17.12.1
       type: l2
       startup-config: configs/SW-PISO2_cfg.partial
-      mgmt-ipv4: 172.20.20.6
+
     PC1-VLAN10:
       kind: linux
       image: alpine:3.23
@@ -84,23 +64,22 @@ topology:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/M1_cfg.partial
-      mgmt-ipv4: 172.20.20.7
+
     M2:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/M2_cfg.partial
-      mgmt-ipv4: 172.20.20.8
 
     M3:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/M3_cfg.partial
-      mgmt-ipv4: 172.20.20.9
+
     M4:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/M4_cfg.partial
-      mgmt-ipv4: 172.20.20.10
+
     #########################################
     #    Branch Office (Oficina Remota)
     #########################################
@@ -119,14 +98,12 @@ topology:
       image: vrnetlab/cisco_iol:L2-17.12.1
       type: l2
       startup-config: configs/SW-R-PISO1_cfg.partial
-      mgmt-ipv4: 172.20.20.13 
 
     SW-R-PISO2:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:L2-17.12.1
       type: l2
       startup-config: configs/SW-R-PISO2_cfg.partial
-      mgmt-ipv4: 172.20.20.14
 
     PC1-R-VLAN5:
       kind: linux
@@ -163,25 +140,21 @@ topology:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/C1_cfg.partial
-      mgmt-ipv4: 172.20.20.15
 
     C2:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/C2_cfg.partial
-      mgmt-ipv4: 172.20.20.16
 
     C3:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/C3_cfg.partial
-      mgmt-ipv4: 172.20.20.17
 
     C4:
       kind: cisco_iol
       image: vrnetlab/cisco_iol:17.12.1
       startup-config: configs/C4_cfg.partial
-      mgmt-ipv4: 172.20.20.18
 
     C5:
       kind: cisco_iol
@@ -327,8 +300,7 @@ topology:
     # Enlaces dentro del ISP Claro
     #
     #########################################
-    - endpoints: [ "C5:e1/1", "CPE-HQ-BACK:e0/1" ]
-    - endpoints: [ "C1:e1/0", "CPE-BRANCH-BACK:e0/1" ]
+    - endpoints: [ "C1:e1/0", "CPE-BRANCH:e0/1" ]
     - endpoints: [ "C2:e0/1", "C3:e0/1" ]
     - endpoints: [ "C2:e0/2", "C4:e0/1" ]
     - endpoints: [ "C2:e1/0", "C1:e0/1" ]
