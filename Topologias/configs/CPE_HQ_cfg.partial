@@ -1,74 +1,200 @@
-track 5 ip route 192.168.5.0 255.255.255.0 reachability
-track 15 ip route 192.168.15.0 255.255.255.0 reachability
+! Last configuration change at 04:46:57 UTC Sun May 17 2026
+!
+version 17.12
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname CPE-HQ
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition clab-mgmt
+ description clab-mgmt
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+no ip domain lookup
+ip domain name lab
+ip cef
+login on-success log
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+!
+!         
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+crypto pki trustpoint TP-self-signed-13
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-13
+ revocation-check none
+ rsakeypair TP-self-signed-13
+ hash sha256
+!
+!
+crypto pki certificate chain TP-self-signed-13
+ certificate self-signed 01
+  30820320 30820208 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
+  29312730 25060355 04030C1E 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 3133301E 170D3236 30353131 30323234 34385A17 0D333630 
+  35313030 32323434 385A3029 31273025 06035504 030C1E49 4F532D53 656C662D 
+  5369676E 65642D43 65727469 66696361 74652D31 33308201 22300D06 092A8648 
+  86F70D01 01010500 0382010F 00308201 0A028201 0100BE37 A403B009 5C25FD96 
+  79004B20 08B863B3 BBF4F1F9 FFA9CBF0 A5597676 5586C83E FAFCA536 8FEF44B8 
+  62027D75 34D12D0A CFC1780E 0CAC79BB EE000F33 5ABF5FAD 119EE0B2 F2E41CB2 
+  753A4A5A 5325BF9D B8A2C31C B8A92753 03FF1A09 320528DD 7FB4DC66 E2967D0B 
+  7536EC56 7981EE64 948698DE 27C41EA2 FB92E91B B3188233 85495595 91BFAF28 
+  09E1E308 0AA2781A 84FCE371 6C745286 68C5B61E 3CC15F66 2CB648C7 62C33706 
+  88A1D7A0 645DB18B 87EE130F B9679CAF F9F1A0E9 46DFB160 94A482DE EE79E38C 
+  9DA4A2EA F7327F5D A92C654A 3E053377 3753B1DE 28BC1213 7FAF2F66 58D6C646 
+  F6279ED3 CC1CA0BE 73B5F75C 72C07BA5 37EEC2B1 E4370203 010001A3 53305130 
+  1D060355 1D0E0416 041425BF 55505A4B 77D1249A 8A79C8C8 CD8361E6 367D301F 
+  0603551D 23041830 16801425 BF55505A 4B77D124 9A8A79C8 C8CD8361 E6367D30 
+  0F060355 1D130101 FF040530 030101FF 300D0609 2A864886 F70D0101 0B050003 
+  82010100 51A84CA3 B6E7233E B2FA60FF 8B8FF93F 7E1C5621 7F203871 2938067E 
+  2645BAB5 23D5CF2E CA20C794 7C40D1DF 29AFF9B3 BCC9051D 8EADDB1E AC6DC694 
+  F276A83F 7858F26B 40218C42 766226AA 54AAF133 A34250A2 863BAF0D E95C815D 
+  804A0232 BD86B561 694507B7 7DC5618C 3184EF0A 275EDE66 E946FECE 5E066440 
+  3474757E F091041D 30E24771 C1309CFA A7B38EF8 B327D743 E6C7A45B 43F4A061 
+  AE10913D D0811F8F 8C4DD775 9CFD1109 7D2541DE A5A76379 187FC3A2 D96C1C62 
+  9FF0CAB9 945D1B89 356B51BE AC41E533 9C84F368 099A4F1E 50DA8904 7D97827E 
+  5084E1E9 E3DD0246 F0B26136 EC8C27F8 0C88B4D0 D891B318 DE3DCA46 B7D4C366 6E8918DC
+        quit
+!
+!
+memory free low-watermark processor 55011
+!
+!
+spanning-tree mode rapid-pvst
+!
+!
+username admin privilege 15 secret 9 $9$9CMuq8U0gkPOsE$IjoR.4jkwTEdCwD.F67ws6ZCGJbL2aOXUkYpA6z15f2
+!
+!
+!
+!
+!
+track 100 ip sla 1 reachability
+ delay down 10 up 20
+!
+!         
+!
+!
+!
+!
+!
+!
 !
 crypto isakmp policy 10
- encr aes
- hash md5
+ encryption aes
+ hash sha
  authentication pre-share
- group 5
+ group 14 
  lifetime 1000
-crypto isakmp key TLN03 address 190.0.0.1
+crypto isakmp key TLN03 address 190.0.0.1      
+crypto isakmp key TLN03 address 190.0.1.1      
+crypto isakmp key TLN03 address 200.0.1.1      
+crypto isakmp key TLN03 address 200.0.2.1      
+crypto isakmp key TLN03 address 190.0.2.1      
 !
-crypto ipsec transform-set TS-TO-BRANCH esp-3des esp-md5-hmac 
- mode transport
+!
 !
 crypto ipsec profile PF-TO-BRANCH
- set transform-set TS-TO-BRANCH
+!
+!         
+!
+!
+!
+!
+!
 !
 interface Loopback0
- ip address 192.168.1.254 255.255.255.255
+ ip address 200.0.0.1 255.255.255.255
+!
+interface Tunnel1
+ description HUB-DMVPN-PRINCIPAL
+ ip address 172.16.10.1 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication DMVPN123
+ ip nhrp network-id 1
+ ip nhrp redirect
+ ip tcp adjust-mss 1360
+ ip ospf network broadcast
+ ip ospf dead-interval 20
+ ip ospf hello-interval 5
+ ip ospf priority 255
+ tunnel source Loopback0
+ tunnel mode gre multipoint
+ tunnel key 100
+ tunnel protection ipsec profile PF-TO-BRANCH
 !
 interface Ethernet0/0
  description clab-mgmt
  vrf forwarding clab-mgmt
- ip address 172.20.20.17 255.255.255.0
- ipv6 address 3FFF:172:20:20::6/64
- ipv6 address 3FFF:172:20:20::11/64
+ ip address 172.20.20.10 255.255.255.0
+ ipv6 address 3FFF:172:20:20::A/64
 !
 interface Ethernet0/1
  ip address 10.0.0.2 255.255.255.252
  ip nat outside
 !
 interface Ethernet0/2
- no ip address 
- no shutdown
+ no ip address
 !
 interface Ethernet0/2.10
- encapsulation dot1q 10
+ encapsulation dot1Q 10
  ip address 192.168.10.2 255.255.255.0
  ip nat inside
  vrrp 10 ip 192.168.10.1
- vrrp 10 preempt
- vrrp 10 track 5
- vrrp 10 track 15
- no shutdown
-!
+ vrrp 10 priority 110
+ vrrp 10 track 100 decrement 20
+!         
 interface Ethernet0/2.20
- encapsulation dot1q 20
+ encapsulation dot1Q 20
  ip address 192.168.20.2 255.255.255.0
  ip nat inside
  vrrp 20 ip 192.168.20.1
- vrrp 20 preempt
- vrrp 20 track 5
- vrrp 20 track 15
- no shutdown
+ vrrp 20 priority 110
+ vrrp 20 track 100 decrement 20
 !
-interface Tunnel1
- ip address 172.16.10.1 255.255.255.252
- tunnel source 200.0.0.1
- tunnel destination 190.0.0.1
- ip ospf hello-interval 5
- ip ospf dead-interval 20
- tunnel protection ipsec profile PF-TO-BRANCH
-
-!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!         
 router ospf 10
-router-id 1.1.1.1
-network 172.16.10.0 0.0.0.3 area 0
-passive-interface ethernet0/2.10
-passive-interface ethernet0/2.20
-network 192.168.10.0 0.0.0.255 area 0
-network 192.168.20.0 0.0.0.255 area 0
+ router-id 1.1.1.1
+ passive-interface Ethernet0/2.10
+ passive-interface Ethernet0/2.20
+ network 172.16.10.0 0.0.0.255 area 0
+ network 192.168.10.0 0.0.0.255 area 0
+ network 192.168.20.0 0.0.0.255 area 0
 !
 ip forward-protocol nd
 !
@@ -77,14 +203,36 @@ ip ftp username dubuntu
 ip ftp password 123456
 ip http server
 ip http secure-server
+ip nat pool HQ-POOL 200.0.0.2 200.0.0.6 prefix-length 29
+ip nat inside source list 10 pool HQ-POOL overload
 ip route 0.0.0.0 0.0.0.0 10.0.0.1
+ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
+ip ssh bulk-mode 131072
 !
+ip sla 1
+ icmp-echo 8.8.8.8 source-interface Loopback0
+  frequency 5
+ip sla schedule 1 life forever start-time now
 ip access-list standard 10
  10 permit 192.168.10.0 0.0.0.255
  20 permit 192.168.20.0 0.0.0.255
+ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
 !
-ip nat pool HQ-POOL 200.0.0.2 200.0.0.6 prefix-length 29
-ip nat inside source list 10 pool HQ-POOL overload
 !
-ip ftp username dubuntu
-ip ftp password 123456
+!
+!
+control-plane
+!
+!         
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+!
+end       

@@ -1,74 +1,238 @@
 !
-crypto isakmp policy 10
- encr aes
- hash md5
- authentication pre-share
- group 5
- lifetime 1000
-crypto isakmp key TLN03 address 190.0.1.1 
+! Last configuration change at 04:47:51 UTC Sun May 17 2026
 !
-crypto ipsec transform-set TS-TO-HQ esp-3des esp-md5-hmac 
- mode transport
+version 17.12
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname CPE-BRANCH-BK
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition clab-mgmt
+ description clab-mgmt
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+no ip domain lookup
+ip domain name lab
+ip cef
+login on-success log
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+!
+!         
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+crypto pki trustpoint TP-self-signed-10
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-10
+ revocation-check none
+ rsakeypair TP-self-signed-10
+ hash sha256
+!
+!
+crypto pki certificate chain TP-self-signed-10
+ certificate self-signed 01
+  30820320 30820208 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
+  29312730 25060355 04030C1E 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 3130301E 170D3236 30353130 31353433 34315A17 0D333630 
+  35303931 35343334 315A3029 31273025 06035504 030C1E49 4F532D53 656C662D 
+  5369676E 65642D43 65727469 66696361 74652D31 30308201 22300D06 092A8648 
+  86F70D01 01010500 0382010F 00308201 0A028201 0100C14B 6B87BB96 44F6F40D 
+  8C6C9B28 0DE8E1D7 C875CB58 39108CD7 0F7EE00C BEFB8D69 81FE4383 E6670C0D 
+  179665AE D8A95A74 F68ECFDD E64F4937 CA23C338 42DCD338 AFACF2BC 0C7ECE01 
+  B4105BE7 09CDACC2 03B7CEE1 E0CAB349 607038CB 506A6C80 0D2941DA AF78937B 
+  16B36FCC 5AED05B2 0F00CB09 FDC02F0D 7A3592CE 95934FFA 97211D3B 203FEA88 
+  6CA1B67C 28502F1F 50DABD21 44DE295A 95ABEBCA FD72D6E4 907DF5A4 2F610480 
+  21B0A7C7 D5917152 5E1BE487 9CE0BDAF B6870EC8 DB3AE330 D8DAA030 7E07D2BD 
+  990DB047 0255DD82 8D4C416E A40A48C3 856603C3 C8319024 E3955E5B AB2EB8E3 
+  071E390E C737DFDD 370E4331 4539ED28 F6303C26 FD630203 010001A3 53305130 
+  1D060355 1D0E0416 0414DC26 A50D6D7F 17D56F0D 855D038E F90CCE41 A925301F 
+  0603551D 23041830 168014DC 26A50D6D 7F17D56F 0D855D03 8EF90CCE 41A92530 
+  0F060355 1D130101 FF040530 030101FF 300D0609 2A864886 F70D0101 0B050003 
+  82010100 89A86119 525B3140 96A06893 B7F709A0 96B6C170 B19DEF1D 6788EDA3 
+  99A9C742 3B85893E 89EF4999 350628D8 51F83AFA 7E8A2F6D 06700D1F 0C66E211 
+  02B8074F 919171B4 DC123420 0A12EC3E 37F06888 4BA5C1A5 01AC2744 49900D53 
+  F3B65651 4A932F0F 906707E3 E5295916 53AF2A81 93F9B0D7 12113EB7 96FB7BE3 
+  F07D34AB 3F8A94F5 44A4AE03 9D4696A4 2754CAA9 4041C023 8A729733 C471A47C 
+  E841B077 2A80ACD6 D13C3731 CF7A69F1 669FBD8A 39C99225 F4FDA015 B36EFD6D 
+  5AF2F2FB 231C78FF 412B54CF 7D6D75CF A31873CF C31074B4 6F8FF547 444D1C9D 
+  CDFD8571 3829EE32 38DED8F0 1E946959 208EC869 0965238A 203F1703 F7047B47 8EAFD1CD
+        quit
+!
+!
+memory free low-watermark processor 55011
+!
+!
+spanning-tree mode rapid-pvst
+!
+!
+username admin privilege 15 secret 9 $9$pD4KBnmlCVwcXE$wGWVoj16jiGnwkNS6urgDR7Yj4MNmvN7ModSob7fQS.
+!
+!
+!
+!
+!
+track 100 ip sla 1 reachability
+ delay down 10 up 20
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+crypto isakmp policy 10
+ encryption aes
+ hash sha
+ authentication pre-share
+ group 14 
+ lifetime 1000
+crypto isakmp key TLN03 address 0.0.0.0        
+!
+!
 !
 crypto ipsec profile PF-TO-HQ
- set transform-set TS-TO-HQ
+!
+!
+!
+!
+!
+!         
+!
 !
 interface Loopback0
  ip address 200.0.1.1 255.255.255.255
+!
+interface Tunnel1
+ ip address 172.16.10.12 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication DMVPN123
+ ip nhrp map 172.16.10.1 200.0.0.1
+ ip nhrp map multicast 200.0.0.1
+ ip nhrp map 172.16.10.2 190.0.1.1
+ ip nhrp map multicast 190.0.1.1
+ ip nhrp network-id 1
+ ip nhrp nhs 172.16.10.1
+ ip nhrp nhs 172.16.10.2
+ ip tcp adjust-mss 1360
+ ip ospf network broadcast
+ ip ospf dead-interval 20
+ ip ospf hello-interval 5
+ ip ospf priority 0
+ ip ospf cost 1000
+ tunnel source Loopback0
+ tunnel mode gre multipoint
+ tunnel key 100
+ tunnel protection ipsec profile PF-TO-HQ
+!
+interface Ethernet0/0
+ description clab-mgmt
+ vrf forwarding clab-mgmt
+ ip address 172.20.20.35 255.255.255.0
+ ipv6 address 3FFF:172:20:20::23/64
 !
 interface Ethernet0/1
  ip address 10.0.0.70 255.255.255.252
  ip nat outside
 !
 interface Ethernet0/2
- no ip address 
- no shutdown
+ no ip address
 !
 interface Ethernet0/2.5
- encapsulation dot1q 5
+ encapsulation dot1Q 5
  ip address 192.168.5.3 255.255.255.0
  ip nat inside
  vrrp 5 ip 192.168.5.1
  vrrp 5 priority 95
- no shutdown
-!
+!         
 interface Ethernet0/2.15
- encapsulation dot1q 15 
+ encapsulation dot1Q 15
  ip address 192.168.15.3 255.255.255.0
  ip nat inside
  vrrp 15 ip 192.168.15.1
  vrrp 15 priority 95
- no shutdown
 !
-interface Tunnel1
- ip address 172.16.20.2 255.255.255.252
- tunnel source 200.0.1.1
- tunnel destination 190.0.1.1
- ip ospf hello-interval 5
- ip ospf dead-interval 20
- tunnel protection ipsec profile PF-TO-HQ
+interface Ethernet0/3
+ no ip address
+ shutdown
 !
 router ospf 10
-router-id 4.4.4.4
-passive-interface ethernet0/2.5
-passive-interface ethernet0/2.15
-network 172.16.20.0 0.0.0.3 area 0
-network 192.168.5.0 0.0.0.255 area 0
-network 192.168.15.0 0.0.0.255 area 0
-!
-ip access-list standard 10
- 10 permit 192.168.5.0 0.0.0.255
- 20 permit 192.168.15.0 0.0.0.255
-!
-ip nat pool BRANCH-POOL 200.0.1.2 200.0.1.6 prefix-length 29
-ip nat inside source list 10 pool BRANCH-POOL overload
+ router-id 4.4.4.4
+ passive-interface Ethernet0/2.5
+ passive-interface Ethernet0/2.15
+ network 172.16.10.0 0.0.0.255 area 0
+ network 192.168.5.0 0.0.0.255 area 0
+ network 192.168.15.0 0.0.0.255 area 0
 !
 ip forward-protocol nd
 !
 !
-ip http server
-ip http secure-server
-ip route 0.0.0.0 0.0.0.0 10.0.0.69
-!
 ip ftp username dubuntu
 ip ftp password 123456
+ip http server
+ip http secure-server
+ip nat pool BRANCH-POOL 200.0.1.2 200.0.1.6 prefix-length 29
+ip nat inside source list 10 pool BRANCH-POOL overload
+ip route 0.0.0.0 0.0.0.0 10.0.0.69
+ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
+ip ssh bulk-mode 131072
+!
+ip sla 1
+ icmp-echo 8.8.8.8 source-interface Loopback0
+  frequency 5
+ip sla schedule 1 life forever start-time now
+ip access-list standard 10
+ 10 permit 192.168.5.0 0.0.0.255
+ 20 permit 192.168.15.0 0.0.0.255
+ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
+!
+!
+!
+!
+control-plane
+!
+!
+!         
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+!
+end

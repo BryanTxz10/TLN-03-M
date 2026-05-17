@@ -15,5 +15,3 @@ sw acc vlan 15
 int e0/3
 sw mode access
 sw acc vlan 15
-
-end
