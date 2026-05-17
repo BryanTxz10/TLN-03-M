@@ -1,0 +1,522 @@
+{
+  "freeTextAnnotations": [],
+  "freeShapeAnnotations": [
+    {
+      "id": "freeShape_1779001256423",
+      "shapeType": "rectangle",
+      "position": {
+        "x": -643.2763977580129,
+        "y": 83.11469379143998
+      },
+      "width": 436,
+      "height": 496,
+      "fillColor": "rgba(127, 127, 127, 0.16)",
+      "fillOpacity": 0.2,
+      "borderColor": "#bbbebf",
+      "borderWidth": 1,
+      "borderStyle": "solid",
+      "rotation": 0,
+      "zIndex": -1
+    },
+    {
+      "id": "freeShape_1779001281553",
+      "shapeType": "rectangle",
+      "position": {
+        "x": 513.4158336026106,
+        "y": 1.6091940228856743
+      },
+      "width": 436,
+      "height": 558,
+      "fillColor": "rgba(127, 127, 127, 0.16)",
+      "fillOpacity": 0.2,
+      "borderColor": "#bbbebf",
+      "borderWidth": 1,
+      "borderStyle": "solid",
+      "rotation": 0,
+      "zIndex": -1
+    },
+    {
+      "id": "freeShape_1779001332864",
+      "shapeType": "circle",
+      "position": {
+        "x": -186.49360915429185,
+        "y": 130.70490014358222
+      },
+      "width": 373,
+      "height": 373,
+      "fillColor": "rgba(127, 127, 127, 0.16)",
+      "fillOpacity": 0.2,
+      "borderColor": "#bbbebf",
+      "borderWidth": 1,
+      "borderStyle": "solid",
+      "rotation": 0,
+      "zIndex": -1
+    },
+    {
+      "id": "freeShape_1779001354012",
+      "shapeType": "circle",
+      "position": {
+        "x": 122.90032241479707,
+        "y": 91.34679971718356
+      },
+      "width": 428,
+      "height": 428,
+      "fillColor": "rgba(127, 127, 127, 0.16)",
+      "fillOpacity": 0.2,
+      "borderColor": "#bbbebf",
+      "borderWidth": 1,
+      "borderStyle": "solid",
+      "rotation": 0,
+      "zIndex": -1
+    },
+    {
+      "id": "freeShape_1779001370699",
+      "shapeType": "circle",
+      "position": {
+        "x": 94.60209696640487,
+        "y": -428.68422265844345
+      },
+      "width": 167,
+      "height": 167,
+      "fillColor": "rgba(127, 127, 127, 0.16)",
+      "fillOpacity": 0.2,
+      "borderColor": "#bbbebf",
+      "borderWidth": 1,
+      "borderStyle": "solid",
+      "rotation": 0,
+      "zIndex": -1
+    },
+    {
+      "id": "freeShape_1779001382074",
+      "shapeType": "rectangle",
+      "position": {
+        "x": -157.1524142222152,
+        "y": -225.73895626767506
+      },
+      "width": 148,
+      "height": 352,
+      "fillColor": "rgba(127, 127, 127, 0.16)",
+      "fillOpacity": 0.2,
+      "borderColor": "#bbbebf",
+      "borderWidth": 1,
+      "borderStyle": "solid",
+      "rotation": 0,
+      "zIndex": -1
+    },
+    {
+      "id": "freeShape_1779001404728",
+      "shapeType": "rectangle",
+      "position": {
+        "x": 25.146852950186513,
+        "y": -230.66596348855072
+      },
+      "width": 111,
+      "height": 362,
+      "fillColor": "rgba(127, 127, 127, 0.16)",
+      "fillOpacity": 0.2,
+      "borderColor": "#bbbebf",
+      "borderWidth": 1,
+      "borderStyle": "solid",
+      "rotation": 0,
+      "zIndex": -1
+    },
+    {
+      "id": "freeShape_1779001414974",
+      "shapeType": "rectangle",
+      "position": {
+        "x": 186.09575549879347,
+        "y": -227.38129200796695
+      },
+      "width": 139,
+      "height": 347,
+      "fillColor": "rgba(127, 127, 127, 0.16)",
+      "fillOpacity": 0.2,
+      "borderColor": "#bbbebf",
+      "borderWidth": 1,
+      "borderStyle": "solid",
+      "rotation": 0,
+      "zIndex": -1
+    },
+    {
+      "id": "freeShape_1779001428572",
+      "shapeType": "rectangle",
+      "position": {
+        "x": 381.5337085935306,
+        "y": -225.738956267675
+      },
+      "width": 126,
+      "height": 341,
+      "fillColor": "rgba(127, 127, 127, 0.16)",
+      "fillOpacity": 0.2,
+      "borderColor": "#bbbebf",
+      "borderWidth": 1,
+      "borderStyle": "solid",
+      "rotation": 0,
+      "zIndex": -1
+    }
+  ],
+  "trafficRateAnnotations": [],
+  "groupStyleAnnotations": [],
+  "networkNodeAnnotations": [],
+  "nodeAnnotations": [
+    {
+      "id": "AS300",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -260,
+        "y": 160
+      }
+    },
+    {
+      "id": "CPE-HQ",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -300,
+        "y": 300
+      }
+    },
+    {
+      "id": "CPE-HQ-BK",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -300,
+        "y": 460
+      }
+    },
+    {
+      "id": "SW-PISO1",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -420,
+        "y": 380
+      }
+    },
+    {
+      "id": "SW-PISO2",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -420,
+        "y": 240
+      }
+    },
+    {
+      "id": "M1",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -160,
+        "y": 300
+      }
+    },
+    {
+      "id": "M2",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -20,
+        "y": 160
+      }
+    },
+    {
+      "id": "M3",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -20,
+        "y": 400
+      }
+    },
+    {
+      "id": "M4",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "CPE-BRANCH",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 560,
+        "y": 340
+      }
+    },
+    {
+      "id": "CPE-BRANCH-BK",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 560,
+        "y": 480
+      }
+    },
+    {
+      "id": "SW-R-PISO1",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 680,
+        "y": 400
+      }
+    },
+    {
+      "id": "SW-R-PISO2",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 680,
+        "y": 160
+      }
+    },
+    {
+      "id": "C1",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 440,
+        "y": 220
+      }
+    },
+    {
+      "id": "C2",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 340,
+        "y": 100
+      }
+    },
+    {
+      "id": "C3",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 220,
+        "y": 200
+      }
+    },
+    {
+      "id": "C4",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 220,
+        "y": 340
+      }
+    },
+    {
+      "id": "C5",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 380,
+        "y": 420
+      }
+    },
+    {
+      "id": "T1",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -100,
+        "y": 60
+      }
+    },
+    {
+      "id": "T2",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -100,
+        "y": -80
+      }
+    },
+    {
+      "id": "T3",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -100,
+        "y": -200
+      }
+    },
+    {
+      "id": "ATT1",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 60,
+        "y": 60
+      }
+    },
+    {
+      "id": "ATT2",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 60,
+        "y": -80
+      }
+    },
+    {
+      "id": "ATT3",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 60,
+        "y": -200
+      }
+    },
+    {
+      "id": "OR1",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 240,
+        "y": 40
+      }
+    },
+    {
+      "id": "OR2",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 240,
+        "y": -80
+      }
+    },
+    {
+      "id": "OR3",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 240,
+        "y": -200
+      }
+    },
+    {
+      "id": "LU1",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 420,
+        "y": 40
+      }
+    },
+    {
+      "id": "LU2",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 420,
+        "y": -80
+      }
+    },
+    {
+      "id": "LU3",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 420,
+        "y": -200
+      }
+    },
+    {
+      "id": "GOOGLE",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 160,
+        "y": -380
+      }
+    },
+    {
+      "id": "PC1-R-VLAN25",
+      "position": {
+        "x": -120,
+        "y": 760
+      }
+    },
+    {
+      "id": "PC1-VLAN10",
+      "position": {
+        "x": -560,
+        "y": 460
+      }
+    },
+    {
+      "id": "PC2-VLAN10",
+      "position": {
+        "x": -560,
+        "y": 360
+      }
+    },
+    {
+      "id": "PC3-VLAN20",
+      "position": {
+        "x": -560,
+        "y": 240
+      }
+    },
+    {
+      "id": "PC4-VLAN20",
+      "position": {
+        "x": -560,
+        "y": 120
+      }
+    },
+    {
+      "id": "PC1-R-VLAN5",
+      "position": {
+        "x": 840,
+        "y": 320
+      }
+    },
+    {
+      "id": "PC2-R-VLAN5",
+      "position": {
+        "x": 860,
+        "y": 440
+      }
+    },
+    {
+      "id": "PC3-R-VLAN15",
+      "position": {
+        "x": 820,
+        "y": 40
+      }
+    },
+    {
+      "id": "PC4-R-VLAN15",
+      "position": {
+        "x": 840,
+        "y": 160
+      }
+    },
+    {
+      "id": "CPE-BRANCH2",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": -20,
+        "y": 580
+      }
+    },
+    {
+      "id": "CPE-BRANCH2-BK",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 180,
+        "y": 580
+      }
+    },
+    {
+      "id": "SW-R2-PISO1",
+      "interfacePattern": "e0/{n}",
+      "position": {
+        "x": 80,
+        "y": 700
+      }
+    },
+    {
+      "id": "PC4-R-VLAN30",
+      "position": {
+        "x": 100,
+        "y": 840
+      }
+    },
+    {
+      "id": "PC3-R-VLAN30",
+      "position": {
+        "x": -40,
+        "y": 820
+      }
+    },
+    {
+      "id": "PC2-R-VLAN25",
+      "position": {
+        "x": 240,
+        "y": 800
+      }
+    }
+  ],
+  "edgeAnnotations": [],
+  "aliasEndpointAnnotations": [],
+  "viewerSettings": {}
+}

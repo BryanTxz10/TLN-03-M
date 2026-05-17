@@ -133,6 +133,55 @@ topology:
         - ip add add 192.168.15.20/24 dev eth1
         - ip route replace default via 192.168.15.1 dev eth1
 
+
+    #########################################
+    #    Branch Office 2 (Oficina Remota)
+    #########################################
+
+    CPE-BRANCH2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      #startup-config: configs/CPE_BRANCH2_cfg.partial
+    
+    CPE-BRANCH2-BK:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+      #startup-config: configs/CPE_BRANCH2_BK_cfg.partial
+
+    SW-R2-PISO1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:L2-17.12.1
+      type: l2
+      #startup-config: configs/SW-R2-PISO1_cfg.partial
+
+    PC1-R-VLAN25:
+      kind: linux
+      image: alpine:3.23
+      exec:
+        - ip add add 192.168.25.10/24 dev eth1
+        - ip route replace default via 192.168.25.1 dev eth1
+
+    PC2-R-VLAN25:
+      kind: linux
+      image: alpine:3.23
+      exec:
+        - ip add add 192.168.25.20/24 dev eth1
+        - ip route replace default via 192.168.25.1 dev eth1
+
+    PC3-R-VLAN30:
+      kind: linux
+      image: alpine:3.23
+      exec:
+        - ip add add 192.168.30.10/24 dev eth1
+        - ip route replace default via 192.168.30.1 dev eth1
+
+    PC4-R-VLAN30:
+      kind: linux
+      image: alpine:3.23
+      exec:
+        - ip add add 192.168.30.20/24 dev eth1
+        - ip route replace default via 192.168.30.1 dev eth1
+
     #########################################
     #    Claro (AS 200)
     #########################################
@@ -284,6 +333,7 @@ topology:
     - endpoints: [ "M2:e0/2", "M4:e0/2" ]
     - endpoints: [ "M3:e0/2", "M4:e0/3" ]
     - endpoints: [ "M3:e0/3", "CPE-BRANCH-BK:e0/1" ]
+    - endpoints: [ "M3:e1/0", "CPE-BRANCH2:e0/1" ]
 
     #########################################
     # Enlaces dentro del ISP Movistar con Telxius
@@ -311,6 +361,7 @@ topology:
     - endpoints: [ "C5:e0/1", "C2:e0/3" ]
     - endpoints: [ "C5:e1/0", "C1:e0/2" ]
     - endpoints: [ "C5:e1/1", "CPE-HQ-BK:e0/1" ]
+    - endpoints: [ "C5:e1/2", "CPE-BRANCH2-BK:e0/1" ]
 
     #########################################
     # Enlaces dentro del ISP Claro con Orange
@@ -343,3 +394,13 @@ topology:
     - endpoints: [ "SW-R-PISO1:e1/0", "PC2-R-VLAN5:eth1" ]
     - endpoints: [ "SW-R-PISO2:e0/2", "PC3-R-VLAN15:eth1" ]
     - endpoints: [ "SW-R-PISO2:e0/3", "PC4-R-VLAN15:eth1" ]
+
+    #########################################
+    # Enlaces dentro del Branch Office 2
+    #########################################
+    - endpoints: [ "CPE-BRANCH2:e0/2", "SW-R2-PISO1:e0/1" ]
+    - endpoints: [ "CPE-BRANCH2-BK:e0/2", "SW-R2-PISO1:e0/2" ]
+    - endpoints: [ "SW-R2-PISO1:e0/3", "PC1-R-VLAN25:eth1" ]
+    - endpoints: [ "SW-R2-PISO1:e1/1", "PC2-R-VLAN25:eth1" ]
+    - endpoints: [ "SW-R2-PISO1:e1/2", "PC3-R-VLAN30:eth1" ]
+    - endpoints: [ "SW-R2-PISO1:e1/3", "PC4-R-VLAN30:eth1" ]
