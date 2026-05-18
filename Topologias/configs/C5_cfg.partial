@@ -121,12 +121,6 @@ username admin privilege 15 secret 9 $9$qKeXIV.ivC6Y6E$RlYO1ehaSg23KM6fsQKsnLU6c
 interface Loopback0
  ip address 172.16.2.5 255.255.255.255
 !
-interface Ethernet0/0
- description clab-mgmt
- vrf forwarding clab-mgmt
- ip address 172.20.20.19 255.255.255.0
- ipv6 address 3FFF:172:20:20::A/64
-!
 interface Ethernet0/1
  ip address 10.0.0.50 255.255.255.252
  ip ospf network point-to-point

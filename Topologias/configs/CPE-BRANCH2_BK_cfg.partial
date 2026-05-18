@@ -167,12 +167,7 @@ interface Tunnel1
  tunnel key 100
  tunnel protection ipsec profile PF-TO-HQ
 !
-interface Ethernet0/0
- description clab-mgmt
- vrf forwarding clab-mgmt
- ip address 172.20.20.17 255.255.255.0
- ipv6 address 3FFF:172:20:20::11/64
-!
+
 interface Ethernet0/1
  ip address 10.0.0.78 255.255.255.252
 !

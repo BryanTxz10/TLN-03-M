@@ -118,13 +118,7 @@ username admin privilege 15 secret 9 $9$yqHA9M0o4BnSo.$aPRErq.QBOZblynfKE5Plfqzf
 !
 !
 !
-interface Ethernet0/0
- description clab-mgmt
- vrf forwarding clab-mgmt
- ip address 172.20.20.20 255.255.255.0
- ipv6 address 3FFF:172:20:20::D/64
- ipv6 address 3FFF:172:20:20::14/64
-!
+
 interface Ethernet0/1
  description Enlace eBGP con AS100 (M2)
  ip address 10.0.0.77 255.255.255.252
