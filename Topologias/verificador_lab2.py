@@ -1,856 +1,581 @@
 #!/usr/bin/env python3
 """
 ================================================================================
-  LABORATORIO 2 - SISTEMA DE VERIFICACIÓN AUTOMATIZADA
-  Fase 4 | Validación de Topología DMVPN Branch2
-  Herramienta: Paramiko (exec_command + invoke_shell)
+  LAB 2 - VERIFICADOR AUTOMATIZADO
+  DMVPN / OSPF / VRRP / NAT / Redundancia
 ================================================================================
-  Dispositivos objetivo según pc2.md:
-    - CPE-BRANCH2      (172.20.20.26)
-    - CPE-BRANCH2-BK   (172.20.20.17)
-  Verificación extendida (contexto completo):
-    - CPE-HQ           (172.20.20.10)
-    - CPE-HQ-BK        (172.20.20.XX) → derivado del yml
-    - CPE-BRANCH       (172.20.20.36)
-    - CPE-BRANCH-BK    (172.20.20.35)
+  Conexión por nombre de contenedor (método del profesor):
+      clab-ISP-TDP-CLARO-IOL-<NODO>
+ 
+  Métodos Paramiko:
+    - exec_command()  → verificación (pc2.md Parte 4)
+    - invoke_shell()  → configuración / shutdown (pc2.md Parte 3)
 ================================================================================
 """
-
+ 
 import paramiko
 import time
 import sys
-import os
-import json
-import datetime
 import re
-from typing import Optional
-
+ 
 # ──────────────────────────────────────────────────────────────────────────────
-# COLORES ANSI (compatibles Windows con colorama o directamente en terminal)
+# CONFIGURACIÓN
 # ──────────────────────────────────────────────────────────────────────────────
-try:
-    import colorama
-    colorama.init(autoreset=True)
-    GREEN  = "\033[92m"
-    RED    = "\033[91m"
-    YELLOW = "\033[93m"
-    CYAN   = "\033[96m"
-    BOLD   = "\033[1m"
-    RESET  = "\033[0m"
-    BLUE   = "\033[94m"
-    MAGENTA= "\033[95m"
-except ImportError:
-    GREEN = RED = YELLOW = CYAN = BOLD = RESET = BLUE = MAGENTA = ""
-
-# ──────────────────────────────────────────────────────────────────────────────
-# INVENTARIO DE DISPOSITIVOS
-# Fuente: archivos .partial (campo Ethernet0/0 / clab-mgmt)
-# ──────────────────────────────────────────────────────────────────────────────
+LAB      = "ISP-TDP-CLARO-IOL"
+PREFIX   = f"clab-{LAB}"
+USER     = "admin"
+PASS     = "admin"
+TIMEOUT  = 10
+ 
+def cname(node):
+    return f"{PREFIX}-{node}"
+ 
+# Dispositivos y sus datos clave (de los .partial)
 DEVICES = {
     "CPE-HQ": {
-        "host":     "172.20.20.10",
-        "username": "admin",
-        "password": "admin",
-        "role":     "HUB-PRIMARY",
-        "tunnel_ip":"172.16.10.1",
-        "loopback": "200.0.0.1",
-        "lans":     ["192.168.10.0/24", "192.168.20.0/24"],
+        "tunnel_ip": "172.16.10.1",  "loopback": "200.0.0.1",
+        "ospf_id":   "1.1.1.1",      "wan_int":  "Ethernet0/1",
+        "lan_int":   "Ethernet0/2",  "vrrp":     [10, 20],
+        "vips":      ["192.168.10.1","192.168.20.1"],
+        "lans":      ["192.168.10.0","192.168.20.0"],
+        "role":      "HUB-PRINCIPAL", "priority": 255,
     },
     "CPE-HQ-BK": {
-        "host":     "172.20.20.11",   # ajustar si difiere
-        "username": "admin",
-        "password": "admin",
-        "role":     "HUB-BACKUP",
-        "tunnel_ip":"172.16.10.2",
-        "loopback": "190.0.1.1",
-        "lans":     ["192.168.10.0/24", "192.168.20.0/24"],
+        "tunnel_ip": "172.16.10.2",  "loopback": "190.0.1.1",
+        "ospf_id":   "3.3.3.3",      "wan_int":  "Ethernet0/1",
+        "lan_int":   "Ethernet0/2",  "vrrp":     [10, 20],
+        "vips":      ["192.168.10.1","192.168.20.1"],
+        "lans":      ["192.168.10.0","192.168.20.0"],
+        "role":      "HUB-BACKUP",   "priority": 100,
     },
     "CPE-BRANCH": {
-        "host":     "172.20.20.36",
-        "username": "admin",
-        "password": "admin",
-        "role":     "SPOKE-BRANCH1-PRIMARY",
-        "tunnel_ip":"172.16.10.11",
-        "loopback": "190.0.0.1",
-        "lans":     ["192.168.5.0/24", "192.168.15.0/24"],
+        "tunnel_ip": "172.16.10.11", "loopback": "190.0.0.1",
+        "ospf_id":   "2.2.2.2",      "wan_int":  "Ethernet0/1",
+        "lan_int":   "Ethernet0/2",  "vrrp":     [5, 15],
+        "vips":      ["192.168.5.1", "192.168.15.1"],
+        "lans":      ["192.168.5.0", "192.168.15.0"],
+        "role":      "SPOKE-BRANCH1","priority": 0,
     },
     "CPE-BRANCH-BK": {
-        "host":     "172.20.20.35",
-        "username": "admin",
-        "password": "admin",
-        "role":     "SPOKE-BRANCH1-BACKUP",
-        "tunnel_ip":"172.16.10.12",
-        "loopback": "200.0.1.1",
-        "lans":     ["192.168.5.0/24", "192.168.15.0/24"],
+        "tunnel_ip": "172.16.10.12", "loopback": "200.0.1.1",
+        "ospf_id":   "4.4.4.4",      "wan_int":  "Ethernet0/1",
+        "lan_int":   "Ethernet0/2",  "vrrp":     [5, 15],
+        "vips":      ["192.168.5.1", "192.168.15.1"],
+        "lans":      ["192.168.5.0", "192.168.15.0"],
+        "role":      "SPOKE-BRANCH1-BK","priority": 0,
     },
-    # ─── NUEVOS (Branch2) ─────────────────────────────────────────────────
     "CPE-BRANCH2": {
-        "host":     "172.20.20.26",
-        "username": "admin",
-        "password": "admin",
-        "role":     "SPOKE-BRANCH2-PRIMARY",
-        "tunnel_ip":"172.16.10.21",
-        "loopback": "200.0.2.1",
-        "lans":     ["192.168.25.0/24", "192.168.30.0/24"],
+        "tunnel_ip": "172.16.10.21", "loopback": "200.0.2.1",
+        "ospf_id":   "5.5.5.5",      "wan_int":  "Ethernet0/1",
+        "lan_int":   "Ethernet0/2",  "vrrp":     [25, 30],
+        "vips":      ["192.168.25.1","192.168.30.1"],
+        "lans":      ["192.168.25.0","192.168.30.0"],
+        "role":      "SPOKE-BRANCH2","priority": 110,
+        "ospf_cost": 10,
     },
     "CPE-BRANCH2-BK": {
-        "host":     "172.20.20.17",
-        "username": "admin",
-        "password": "admin",
-        "role":     "SPOKE-BRANCH2-BACKUP",
-        "tunnel_ip":"172.16.10.22",
-        "loopback": "190.0.2.1",
-        "lans":     ["192.168.25.0/24", "192.168.30.0/24"],
+        "tunnel_ip": "172.16.10.22", "loopback": "190.0.2.1",
+        "ospf_id":   "6.6.6.6",      "wan_int":  "Ethernet0/1",
+        "lan_int":   "Ethernet0/2",  "vrrp":     [25, 30],
+        "vips":      ["192.168.25.1","192.168.30.1"],
+        "lans":      ["192.168.25.0","192.168.30.0"],
+        "role":      "SPOKE-BRANCH2-BK","priority": 95,
+        "ospf_cost": 1000,
+    },
+    "M3": {
+        "wan_int_branch2": "Ethernet0/3",  # hacia CPE-BRANCH2
+        "role": "ISP-MOVISTAR",
+    },
+    "C5": {
+        "wan_int_branch2bk": "Ethernet0/1",  # hacia CPE-BRANCH2-BK
+        "role": "ISP-CLARO",
     },
 }
-
-# Dispositivos primarios Branch2 (foco del pc2.md)
-BRANCH2_DEVICES = ["CPE-BRANCH2", "CPE-BRANCH2-BK"]
-
-# Resultados globales para reporte final
-RESULTS: dict = {}
-LOG_LINES: list = []
-
+ 
+# Escenarios de redundancia
+SCENARIOS = {
+    "A": {
+        "name":   "Caída HUB Principal (CPE-HQ)",
+        "node":   "CPE-HQ",
+        "int":    "Ethernet0/1",
+        "verify": ["CPE-BRANCH2", "CPE-BRANCH2-BK"],
+        "desc":   "Spokes deben reconverger a CPE-HQ-BK como NHS backup",
+    },
+    "B": {
+        "name":   "Caída WAN Spoke Branch2 (CPE-BRANCH2)",
+        "node":   "CPE-BRANCH2",
+        "int":    "Ethernet0/1",
+        "verify": ["CPE-BRANCH2-BK"],
+        "desc":   "IP SLA falla → VRRP cede a BK (priority 110→90 < 95)",
+    },
+    "C": {
+        "name":   "Caída WAN Movistar hacia Branch2 (M3)",
+        "node":   "M3",
+        "int":    "Ethernet0/3",
+        "verify": ["CPE-BRANCH2"],
+        "desc":   "CPE-BRANCH2 pierde enlace WAN por Movistar",
+    },
+    "D": {
+        "name":   "Caída WAN Claro hacia Branch2-BK (C5)",
+        "node":   "C5",
+        "int":    "Ethernet0/1",
+        "verify": ["CPE-BRANCH2-BK"],
+        "desc":   "CPE-BRANCH2-BK pierde enlace WAN por Claro",
+    },
+    "E": {
+        "name":   "Caída LAN MASTER HQ (CPE-HQ)",
+        "node":   "CPE-HQ",
+        "int":    "Ethernet0/2",
+        "verify": ["CPE-HQ-BK"],
+        "desc":   "VRRP grupos 10 y 20 → CPE-HQ-BK sube a MASTER",
+    },
+    "F": {
+        "name":   "Caída LAN MASTER Branch2 (CPE-BRANCH2)",
+        "node":   "CPE-BRANCH2",
+        "int":    "Ethernet0/2",
+        "verify": ["CPE-BRANCH2-BK"],
+        "desc":   "VRRP grupos 25 y 30 → CPE-BRANCH2-BK sube a MASTER",
+    },
+}
+ 
+ 
 # ──────────────────────────────────────────────────────────────────────────────
-# UTILIDADES
+# SSH — CONEXIÓN
 # ──────────────────────────────────────────────────────────────────────────────
-
-def log(msg: str):
-    """Registra en pantalla y en buffer de log."""
-    ts = datetime.datetime.now().strftime("%H:%M:%S")
-    line = f"[{ts}] {msg}"
-    LOG_LINES.append(line)
-    print(line)
-
-
-def banner(title: str, width: int = 70, char: str = "═"):
-    line = char * width
-    padding = (width - len(title) - 2) // 2
-    print(f"\n{BOLD}{CYAN}{line}{RESET}")
-    print(f"{BOLD}{CYAN}{'':>{padding}} {title} {'':>{padding}}{RESET}")
-    print(f"{BOLD}{CYAN}{line}{RESET}\n")
-
-
-def section(title: str):
-    print(f"\n{BOLD}{YELLOW}── {title} {'─' * (60 - len(title))}{RESET}")
-
-
-def ok(msg: str):
-    log(f"  {GREEN}[✓] {msg}{RESET}")
-
-
-def fail(msg: str):
-    log(f"  {RED}[✗] {msg}{RESET}")
-
-
-def warn(msg: str):
-    log(f"  {YELLOW}[!] {msg}{RESET}")
-
-
-def info(msg: str):
-    log(f"  {BLUE}[i] {msg}{RESET}")
-
-
+ 
+def connect(node):
+    ssh = paramiko.SSHClient()
+    ssh.load_system_host_keys()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname=cname(node), username=USER, password=PASS,
+                look_for_keys=False, timeout=TIMEOUT)
+    return ssh
+ 
+ 
+def exec_cmd(ssh, cmd):
+    """exec_command — verificación (pc2.md Parte 4)"""
+    stdin, stdout, stderr = ssh.exec_command(cmd)
+    time.sleep(0.8)
+    return stdout.read().decode("utf-8", errors="replace")
+ 
+ 
+def shell_cmds(ssh, cmds, wait=2.0):
+    """invoke_shell — sesión interactiva (pc2.md Parte 3)"""
+    sh = ssh.invoke_shell()
+    time.sleep(1)
+    if sh.recv_ready():
+        sh.recv(65535)
+    sh.send("terminal length 0\n")
+    time.sleep(0.5)
+    out = ""
+    for c in cmds:
+        sh.send(c + "\n")
+        time.sleep(wait)
+        if sh.recv_ready():
+            out += sh.recv(65535).decode("utf-8", errors="replace")
+    return out
+ 
+ 
 # ──────────────────────────────────────────────────────────────────────────────
-# CONEXIÓN SSH con Paramiko
+# IMPRESIÓN
 # ──────────────────────────────────────────────────────────────────────────────
-
-def get_ssh_client(device_name: str) -> Optional[paramiko.SSHClient]:
-    """Crea y retorna un cliente SSH conectado al dispositivo."""
-    dev = DEVICES[device_name]
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+ 
+def sep(title="", ch="─"):
+    w = 68
+    if title:
+        print(f"\n  {ch*3} {title} {ch*max(0, w-len(title)-5)}")
+    else:
+        print(f"  {ch*w}")
+ 
+def ok(m):   print(f"    [OK]  {m}")
+def fail(m): print(f"    [KO]  {m}")
+def info(m): print(f"    [>>]  {m}")
+def warn(m): print(f"    [!!]  {m}")
+ 
+ 
+# ──────────────────────────────────────────────────────────────────────────────
+# MÓDULO 1 — DMVPN / TÚNEL
+# ──────────────────────────────────────────────────────────────────────────────
+ 
+def verify_dmvpn(node):
+    sep(f"DMVPN — {node}")
     try:
-        client.connect(
-            hostname=dev["host"],
-            username=dev["username"],
-            password=dev["password"],
-            look_for_keys=False,
-            timeout=10,
-            allow_agent=False,
-        )
-        ok(f"SSH conectado → {device_name} ({dev['host']})")
-        return client
-    except Exception as e:
-        fail(f"No se pudo conectar a {device_name} ({dev['host']}): {e}")
-        return None
-
-
-def exec_cmd(client: paramiko.SSHClient, command: str, timeout: int = 15) -> str:
-    """Ejecuta un comando usando exec_command() y retorna el output."""
-    try:
-        stdin, stdout, stderr = client.exec_command(command, timeout=timeout)
-        output = stdout.read().decode("utf-8", errors="replace")
-        return output
-    except Exception as e:
-        return f"ERROR: {e}"
-
-
-def shell_cmds(client: paramiko.SSHClient, commands: list, wait: float = 2.0) -> str:
-    """Envía comandos interactivos usando invoke_shell() — para config/verificación."""
-    try:
-        shell = client.invoke_shell()
-        time.sleep(1)
-        shell.send("terminal length 0\n")
-        time.sleep(0.5)
-        # Limpiar buffer inicial
-        if shell.recv_ready():
-            shell.recv(65535)
-        full_output = ""
-        for cmd in commands:
-            shell.send(cmd + "\n")
-            time.sleep(wait)
-            if shell.recv_ready():
-                chunk = shell.recv(65535).decode("utf-8", errors="replace")
-                full_output += chunk
-        return full_output
-    except Exception as e:
-        return f"ERROR: {e}"
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# MÓDULO 1 – VERIFICAR TÚNEL DMVPN
-# ──────────────────────────────────────────────────────────────────────────────
-
-def verify_dmvpn(device_name: str) -> dict:
-    """
-    Verifica estado DMVPN:
-      - show dmvpn
-      - show interface tunnel1
-      - show ip nhrp
-    Usa exec_command() según pc2.md Parte 4.
-    """
-    section(f"DMVPN → {device_name}")
-    result = {"device": device_name, "dmvpn_up": False, "nhrp_entries": 0,
-              "tunnel_up": False, "peers": [], "raw": {}}
-
-    client = get_ssh_client(device_name)
-    if not client:
-        result["error"] = "Sin conexión SSH"
-        return result
-
-    try:
-        # ── show dmvpn ──────────────────────────────────────────────────────
-        dmvpn_out = exec_cmd(client, "show dmvpn")
-        result["raw"]["show_dmvpn"] = dmvpn_out
-        info(f"show dmvpn output ({device_name}):")
-        print(f"{dmvpn_out[:800]}")
-
-        # Parsear peers NHRP/DMVPN
-        peers = re.findall(r'(\d+\.\d+\.\d+\.\d+)\s+(\d+\.\d+\.\d+\.\d+)\s+\w+\s+(\w+)', dmvpn_out)
+        ssh = connect(node)
+ 
+        # show dmvpn
+        out = exec_cmd(ssh, "show dmvpn")
+        peers = re.findall(r'(\d+\.\d+\.\d+\.\d+)\s+(\d+\.\d+\.\d+\.\d+)\s+\w+\s+(\w+)', out)
         if peers:
-            result["peers"] = peers
-            result["dmvpn_up"] = True
-            ok(f"DMVPN activo – {len(peers)} peer(s) encontrados")
+            ok(f"DMVPN activo — {len(peers)} peer(s)")
+            for p in peers:
+                info(f"  NBMA {p[0]} ↔ tunnel {p[1]} [{p[2]}]")
         else:
-            # Verificar al menos que el proceso existe
-            if "Ident" in dmvpn_out or "nhrp" in dmvpn_out.lower():
-                warn(f"DMVPN configurado pero sin peers activos aún")
-                result["dmvpn_up"] = True  # proceso existe
+            warn("DMVPN sin peers registrados")
+ 
+        # show interface tunnel1
+        out = exec_cmd(ssh, "show interface tunnel1")
+        if "line protocol is up" in out.lower():
+            ok("Tunnel1 UP/UP")
+        else:
+            fail("Tunnel1 no está UP")
+ 
+        # show ip nhrp
+        out = exec_cmd(ssh, "show ip nhrp")
+        cnt = len(re.findall(r'via\s+\d+\.\d+\.\d+\.\d+', out))
+        ok(f"NHRP: {cnt} entrada(s)") if cnt else warn("NHRP sin entradas")
+ 
+        # show ip nhrp nhs (solo spokes)
+        if node not in ["CPE-HQ", "CPE-HQ-BK"]:
+            out = exec_cmd(ssh, "show ip nhrp nhs")
+            if "200.0.0.1" in out or "190.0.1.1" in out:
+                ok("NHS (ambos HUBs) registrados")
             else:
-                fail(f"DMVPN no encontrado o sin información")
-
-        # ── show interface tunnel1 ───────────────────────────────────────────
-        tun_out = exec_cmd(client, "show interface tunnel1")
-        result["raw"]["show_interface_tunnel"] = tun_out
-        if "line protocol is up" in tun_out.lower():
-            result["tunnel_up"] = True
-            ok(f"Tunnel1 → UP/UP")
-        elif "line protocol is down" in tun_out.lower():
-            fail(f"Tunnel1 → DOWN")
-        else:
-            warn(f"Estado de Tunnel1 indeterminado")
-
-        # ── show ip nhrp ─────────────────────────────────────────────────────
-        nhrp_out = exec_cmd(client, "show ip nhrp")
-        result["raw"]["show_ip_nhrp"] = nhrp_out
-        nhrp_entries = len(re.findall(r'via\s+\d+\.\d+\.\d+\.\d+', nhrp_out))
-        result["nhrp_entries"] = nhrp_entries
-        if nhrp_entries > 0:
-            ok(f"NHRP: {nhrp_entries} entrada(s) registrada(s)")
-        else:
-            warn(f"NHRP: sin entradas activas")
-
-        # ── show ip nhrp nhs ─────────────────────────────────────────────────
-        nhs_out = exec_cmd(client, "show ip nhrp nhs")
-        result["raw"]["show_ip_nhrp_nhs"] = nhs_out
-        if "200.0.0.1" in nhs_out or "190.0.1.1" in nhs_out:
-            ok(f"NHS registrados correctamente (HUB principal y backup)")
-        else:
-            warn(f"NHS no encontrados en tabla NHRP")
-
-    finally:
-        client.close()
-
-    return result
-
-
+                warn("NHS no encontrados")
+ 
+        ssh.close()
+    except Exception as e:
+        fail(f"Error: {e}")
+ 
+ 
 # ──────────────────────────────────────────────────────────────────────────────
-# MÓDULO 2 – VERIFICAR OSPF
+# MÓDULO 2 — OSPF
 # ──────────────────────────────────────────────────────────────────────────────
-
-def verify_ospf(device_name: str) -> dict:
-    """
-    Verifica estado OSPF:
-      - show ip ospf neighbor
-      - show ip ospf interface tunnel1
-    Nota: pc2.md menciona EIGRP pero la config real usa OSPF área 0.
-    """
-    section(f"OSPF → {device_name}")
-    result = {"device": device_name, "neighbors": [], "ospf_up": False, "raw": {}}
-
-    client = get_ssh_client(device_name)
-    if not client:
-        result["error"] = "Sin conexión SSH"
-        return result
-
+ 
+def verify_ospf(node):
+    sep(f"OSPF — {node}")
     try:
-        # ── show ip ospf neighbor ────────────────────────────────────────────
-        ospf_out = exec_cmd(client, "show ip ospf neighbor")
-        result["raw"]["ospf_neighbors"] = ospf_out
-        info(f"OSPF Neighbors ({device_name}):")
-        print(f"{ospf_out[:600]}")
-
-        # Parsear vecinos en estado FULL
-        full_neighbors = re.findall(r'(\d+\.\d+\.\d+\.\d+)\s+\d+\s+FULL', ospf_out)
-        result["neighbors"] = full_neighbors
-        if full_neighbors:
-            result["ospf_up"] = True
-            ok(f"OSPF: {len(full_neighbors)} vecino(s) en estado FULL → {full_neighbors}")
+        ssh = connect(node)
+ 
+        out = exec_cmd(ssh, "show ip ospf neighbor")
+        full = re.findall(r'(\d+\.\d+\.\d+\.\d+)\s+\d+\s+FULL', out)
+        if full:
+            ok(f"Vecinos FULL: {full}")
         else:
-            # Verificar 2-WAY o INIT también
-            any_neighbor = re.findall(r'(\d+\.\d+\.\d+\.\d+)\s+\d+\s+(\w+)', ospf_out)
-            if any_neighbor:
-                warn(f"OSPF: vecinos presentes pero no en FULL → {any_neighbor}")
-            else:
-                fail(f"OSPF: sin vecinos detectados")
-
-        # ── show ip ospf interface tunnel1 ───────────────────────────────────
-        ospf_int_out = exec_cmd(client, "show ip ospf interface tunnel1")
-        result["raw"]["ospf_interface"] = ospf_int_out
-        if "area 0" in ospf_int_out.lower():
-            ok(f"OSPF: Tunnel1 participando en área 0")
-        if "network type broadcast" in ospf_int_out.lower():
-            ok(f"OSPF: Tipo de red BROADCAST configurado correctamente")
-
-        # ── show ip ospf ─────────────────────────────────────────────────────
-        ospf_proc = exec_cmd(client, "show ip ospf")
-        result["raw"]["ospf_process"] = ospf_proc
-        if "router id" in ospf_proc.lower():
-            rid = re.search(r'Router ID\s+(\d+\.\d+\.\d+\.\d+)', ospf_proc, re.IGNORECASE)
-            if rid:
-                ok(f"OSPF Router-ID: {rid.group(1)}")
-
-    finally:
-        client.close()
-
-    return result
-
-
+            others = re.findall(r'(\S+)\s+\d+\s+(\w+/\w+|\w+)', out)
+            warn(f"Sin vecinos FULL — {others[:3]}" if others else "Sin vecinos OSPF")
+ 
+        out = exec_cmd(ssh, "show ip ospf interface tunnel1")
+        if "area 0" in out.lower():
+            ok("Tunnel1 en área 0")
+        if "broadcast" in out.lower():
+            ok("Tipo de red BROADCAST")
+ 
+        meta = DEVICES.get(node, {})
+        if meta.get("ospf_cost"):
+            info(f"OSPF cost configurado: {meta['ospf_cost']}")
+ 
+        ssh.close()
+    except Exception as e:
+        fail(f"Error: {e}")
+ 
+ 
 # ──────────────────────────────────────────────────────────────────────────────
-# MÓDULO 3 – VERIFICAR TABLA DE RUTAS
+# MÓDULO 3 — RUTAS
 # ──────────────────────────────────────────────────────────────────────────────
-
-def verify_routes(device_name: str) -> dict:
-    """
-    Verifica tabla de rutas:
-      - show ip route
-      - Valida presencia de rutas hacia LANs de HQ, Branch1 y Branch2
-    """
-    section(f"RUTAS → {device_name}")
-    result = {"device": device_name, "routes_ok": [], "routes_missing": [], "raw": {}}
-
-    # Rutas que deben existir en los spokes de Branch2
-    expected_networks = [
-        "192.168.10.0",  # LAN HQ VLAN10
-        "192.168.20.0",  # LAN HQ VLAN20
-        "192.168.5.0",   # LAN Branch1 VLAN5
-        "192.168.15.0",  # LAN Branch1 VLAN15
-        "172.16.10.0",   # Red tunnel DMVPN
-    ]
-
-    client = get_ssh_client(device_name)
-    if not client:
-        result["error"] = "Sin conexión SSH"
-        return result
-
-    try:
-        route_out = exec_cmd(client, "show ip route")
-        result["raw"]["show_ip_route"] = route_out
-
-        info(f"Tabla de rutas ({device_name}) — fragmento:")
-        # Mostrar solo las rutas O (OSPF) y C (connected)
-        for line in route_out.splitlines():
-            if line.strip().startswith(("O", "C", "S", "B")):
-                print(f"  {line}")
-
-        for net in expected_networks:
-            if net in route_out:
-                result["routes_ok"].append(net)
-                ok(f"Ruta encontrada: {net}")
-            else:
-                result["routes_missing"].append(net)
-                warn(f"Ruta NO encontrada: {net}")
-
-        # Verificar default route
-        if "0.0.0.0/0" in route_out or "0.0.0.0 0.0.0.0" in route_out:
-            ok(f"Default route (0.0.0.0/0) presente")
-        else:
-            warn(f"Default route no encontrada")
-
-    finally:
-        client.close()
-
-    return result
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# MÓDULO 4 – VERIFICAR VRRP
-# ──────────────────────────────────────────────────────────────────────────────
-
-def verify_vrrp(device_name: str) -> dict:
-    """
-    Verifica estado VRRP:
-      - show vrrp brief
-      - Valida grupos 25 y 30 (Branch2) o 5 y 15 (Branch1) o 10 y 20 (HQ)
-    """
-    section(f"VRRP → {device_name}")
-    result = {"device": device_name, "vrrp_groups": [], "master_groups": [], "raw": {}}
-
-    dev = DEVICES[device_name]
-    # Determinar grupos esperados según rol
-    if "BRANCH2" in device_name:
-        expected_groups = [25, 30]
-    elif "BRANCH" in device_name:
-        expected_groups = [5, 15]
-    else:
-        expected_groups = [10, 20]
-
-    client = get_ssh_client(device_name)
-    if not client:
-        result["error"] = "Sin conexión SSH"
-        return result
-
-    try:
-        vrrp_out = exec_cmd(client, "show vrrp brief")
-        result["raw"]["show_vrrp_brief"] = vrrp_out
-        info(f"VRRP ({device_name}):")
-        print(f"{vrrp_out}")
-
-        # Parsear grupos y estado
-        for grp in expected_groups:
-            if str(grp) in vrrp_out:
-                result["vrrp_groups"].append(grp)
-                if "Master" in vrrp_out or "Active" in vrrp_out:
-                    if re.search(rf'\b{grp}\b.*Master', vrrp_out) or re.search(rf'\b{grp}\b.*Active', vrrp_out):
-                        result["master_groups"].append(grp)
-                        ok(f"VRRP grupo {grp} → MASTER")
-                    else:
-                        ok(f"VRRP grupo {grp} → BACKUP (activo)")
-                else:
-                    ok(f"VRRP grupo {grp} → presente")
-            else:
-                fail(f"VRRP grupo {grp} NO encontrado")
-
-        # Verificar IPs virtuales
-        vrrp_detail = exec_cmd(client, "show vrrp")
-        result["raw"]["show_vrrp"] = vrrp_detail
-        if "BRANCH2" in device_name:
-            for vip in ["192.168.25.1", "192.168.30.1"]:
-                if vip in vrrp_detail:
-                    ok(f"Virtual IP {vip} configurada")
-                else:
-                    fail(f"Virtual IP {vip} NO encontrada")
-
-    finally:
-        client.close()
-
-    return result
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# MÓDULO 5 – VERIFICAR NAT
-# ──────────────────────────────────────────────────────────────────────────────
-
-def verify_nat(device_name: str) -> dict:
-    """
-    Verifica NAT overload:
-      - show ip nat translations
-      - show ip nat statistics
-    """
-    section(f"NAT → {device_name}")
-    result = {"device": device_name, "nat_active": False, "translations": 0, "raw": {}}
-
-    client = get_ssh_client(device_name)
-    if not client:
-        result["error"] = "Sin conexión SSH"
-        return result
-
-    try:
-        nat_stats = exec_cmd(client, "show ip nat statistics")
-        result["raw"]["nat_statistics"] = nat_stats
-        info(f"NAT Statistics ({device_name}):")
-        print(f"{nat_stats[:500]}")
-
-        if "outside" in nat_stats.lower() and "inside" in nat_stats.lower():
-            result["nat_active"] = True
-            ok(f"NAT configurado (inside/outside interfaces detectadas)")
-
-        # Hits de NAT
-        hits = re.search(r'Total\s+active\s+translations:\s+(\d+)', nat_stats, re.IGNORECASE)
-        if hits:
-            ok(f"NAT traducciones activas: {hits.group(1)}")
-
-        nat_trans = exec_cmd(client, "show ip nat translations")
-        result["raw"]["nat_translations"] = nat_trans
-        trans_count = len([l for l in nat_trans.splitlines() if "---" not in l and l.strip()])
-        result["translations"] = trans_count
-        if trans_count > 0:
-            ok(f"NAT: {trans_count} traducción(es) en tabla")
-        else:
-            info(f"NAT: tabla vacía (normal si no hay tráfico activo)")
-
-        # Verificar pool correcto para Branch2
-        if "BRANCH2" in device_name:
-            pool_out = exec_cmd(client, "show ip nat pool")
-            result["raw"]["nat_pool"] = pool_out
-            if "200.0.2" in pool_out:
-                ok(f"NAT Pool Branch2 (200.0.2.x) presente")
-            else:
-                warn(f"NAT Pool Branch2 no encontrado")
-
-    finally:
-        client.close()
-
-    return result
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# MÓDULO 6 – VERIFICAR CONECTIVIDAD (PING / TRACEROUTE)
-# ──────────────────────────────────────────────────────────────────────────────
-
-def verify_connectivity(source_device: str) -> dict:
-    """
-    Verifica conectividad extremo a extremo desde Branch2:
-      - Ping hacia HUB (tunnel)
-      - Ping hacia HQ LAN
-      - Ping hacia Branch1 LAN
-      - Traceroute hacia HQ
-    Usa exec_command() con comandos ping extendido de Cisco.
-    """
-    section(f"CONECTIVIDAD → desde {source_device}")
-    result = {"device": source_device, "ping_results": {}, "raw": {}}
-
-    ping_targets = {
-        "HUB-Principal (tunnel)":    "172.16.10.1",
-        "HUB-Backup (tunnel)":       "172.16.10.2",
-        "Branch1 (tunnel)":          "172.16.10.11",
-        "HQ LAN VLAN10":             "192.168.10.1",
-        "HQ LAN VLAN20":             "192.168.20.1",
-        "Branch1 LAN VLAN5":         "192.168.5.1",
-        "Branch1 LAN VLAN15":        "192.168.15.1",
-        "Internet (8.8.8.8)":        "8.8.8.8",
+ 
+def verify_routes(node):
+    sep(f"RUTAS — {node}")
+    expected = {
+        "172.16.10.0":  "túnel DMVPN",
+        "192.168.10.0": "LAN HQ VLAN10",
+        "192.168.20.0": "LAN HQ VLAN20",
+        "192.168.5.0":  "LAN Branch1 VLAN5",
+        "192.168.15.0": "LAN Branch1 VLAN15",
+        "192.168.25.0": "LAN Branch2 VLAN25",
+        "192.168.30.0": "LAN Branch2 VLAN30",
+        "0.0.0.0":      "default route",
     }
-
-    client = get_ssh_client(source_device)
-    if not client:
-        result["error"] = "Sin conexión SSH"
-        return result
-
     try:
-        for label, target_ip in ping_targets.items():
-            # Ping desde loopback para salir por el túnel
-            ping_cmd = f"ping {target_ip} repeat 5 source loopback0"
-            ping_out = exec_cmd(client, ping_cmd, timeout=20)
-            result["raw"][f"ping_{target_ip}"] = ping_out
-
-            # Parsear success rate
-            success = re.search(r'Success rate is (\d+) percent', ping_out)
-            if success:
-                rate = int(success.group(1))
-                result["ping_results"][label] = rate
+        ssh = connect(node)
+        out = exec_cmd(ssh, "show ip route")
+ 
+        for net, label in expected.items():
+            if net in out:
+                ok(f"{net}  ({label})")
+            else:
+                warn(f"{net}  ({label}) — ausente")
+ 
+        ssh.close()
+    except Exception as e:
+        fail(f"Error: {e}")
+ 
+ 
+# ──────────────────────────────────────────────────────────────────────────────
+# MÓDULO 4 — VRRP
+# ──────────────────────────────────────────────────────────────────────────────
+ 
+def verify_vrrp(node):
+    sep(f"VRRP — {node}")
+    meta = DEVICES.get(node, {})
+    groups = meta.get("vrrp", [])
+    if not groups:
+        warn("No aplica VRRP a este nodo"); return
+    try:
+        ssh = connect(node)
+        out = exec_cmd(ssh, "show vrrp brief")
+        print(f"\n{out}")
+ 
+        for g in groups:
+            if re.search(rf'\b{g}\b.*Master', out, re.I):
+                ok(f"VRRP {g} → MASTER")
+            elif re.search(rf'\b{g}\b.*Backup', out, re.I):
+                ok(f"VRRP {g} → BACKUP")
+            elif str(g) in out:
+                warn(f"VRRP {g} presente pero estado desconocido")
+            else:
+                fail(f"VRRP {g} no encontrado")
+ 
+        for vip in meta.get("vips", []):
+            if vip in out:
+                ok(f"VIP {vip} configurada")
+ 
+        ssh.close()
+    except Exception as e:
+        fail(f"Error: {e}")
+ 
+ 
+# ──────────────────────────────────────────────────────────────────────────────
+# MÓDULO 5 — NAT
+# ──────────────────────────────────────────────────────────────────────────────
+ 
+def verify_nat(node):
+    sep(f"NAT — {node}")
+    try:
+        ssh = connect(node)
+ 
+        out = exec_cmd(ssh, "show ip nat statistics")
+        if "outside" in out.lower() and "inside" in out.lower():
+            ok("NAT inside/outside configurado")
+        m = re.search(r'Total\s+active\s+translations:\s+(\d+)', out, re.I)
+        if m:
+            ok(f"Traducciones activas: {m.group(1)}")
+ 
+        out = exec_cmd(ssh, "show ip nat pool")
+        if out.strip():
+            ok(f"NAT pool:\n{out.strip()[:200]}")
+ 
+        ssh.close()
+    except Exception as e:
+        fail(f"Error: {e}")
+ 
+ 
+# ──────────────────────────────────────────────────────────────────────────────
+# MÓDULO 6 — CONECTIVIDAD (PING / TRACEROUTE)
+# ──────────────────────────────────────────────────────────────────────────────
+ 
+def verify_connectivity(node):
+    sep(f"CONECTIVIDAD — desde {node}")
+    targets = {
+        "HUB-Principal túnel":  "172.16.10.1",
+        "HUB-Backup túnel":     "172.16.10.2",
+        "Branch1 túnel":        "172.16.10.11",
+        "Branch2 túnel":        "172.16.10.21",
+        "HQ LAN 192.168.10.1":  "192.168.10.1",
+        "HQ LAN 192.168.20.1":  "192.168.20.1",
+        "Branch1 LAN 5.1":      "192.168.5.1",
+        "Branch2 LAN 25.1":     "192.168.25.1",
+        "Branch2 LAN 30.1":     "192.168.30.1",
+        "Internet 8.8.8.8":     "8.8.8.8",
+    }
+    loopback = DEVICES.get(node, {}).get("loopback", "")
+    try:
+        ssh = connect(node)
+        for label, ip in targets.items():
+            src = f"source loopback0" if loopback else ""
+            out = exec_cmd(ssh, f"ping {ip} repeat 5 {src}", )
+            m = re.search(r'Success rate is (\d+) percent', out)
+            if m:
+                rate = int(m.group(1))
                 if rate == 100:
-                    ok(f"PING {label} ({target_ip}) → {rate}% éxito")
+                    ok(f"PING {label} ({ip}) — 100%")
                 elif rate > 0:
-                    warn(f"PING {label} ({target_ip}) → {rate}% éxito (pérdida parcial)")
+                    warn(f"PING {label} ({ip}) — {rate}% (pérdida parcial)")
                 else:
-                    fail(f"PING {label} ({target_ip}) → FALLO (0%)")
+                    fail(f"PING {label} ({ip}) — 0%")
             else:
-                warn(f"PING {label} ({target_ip}) → sin respuesta parse")
-                result["ping_results"][label] = -1
-
+                warn(f"PING {label} ({ip}) — sin parse")
+ 
         # Traceroute hacia HQ
-        info(f"Traceroute hacia HQ (192.168.10.1)...")
-        trace_out = exec_cmd(client, "traceroute 192.168.10.1 source loopback0 probe 2", timeout=30)
-        result["raw"]["traceroute_hq"] = trace_out
-        info(f"Traceroute:\n{trace_out[:400]}")
-
-    finally:
-        client.close()
-
-    return result
-
-
+        out = exec_cmd(ssh, f"traceroute 192.168.10.1 {src} probe 2 timeout 2")
+        info(f"Traceroute → HQ:\n{out[:300]}")
+ 
+        ssh.close()
+    except Exception as e:
+        fail(f"Error: {e}")
+ 
+ 
 # ──────────────────────────────────────────────────────────────────────────────
-# MÓDULO 7 – VALIDACIÓN COMPLETA (TODAS LAS VERIFICACIONES)
+# MÓDULO 7 — ESCENARIOS DE REDUNDANCIA
 # ──────────────────────────────────────────────────────────────────────────────
-
-def run_full_validation(target_devices: list = None) -> dict:
-    """
-    Ejecuta todas las validaciones sobre los dispositivos indicados.
-    Por defecto ejecuta sobre CPE-BRANCH2 y CPE-BRANCH2-BK (foco pc2.md).
-    """
-    if target_devices is None:
-        target_devices = BRANCH2_DEVICES
-
-    banner("VALIDACIÓN COMPLETA – LABORATORIO 2")
-    all_results = {}
-
-    for dev in target_devices:
-        banner(f"DISPOSITIVO: {dev}", char="─")
-        dev_results = {}
-
-        dev_results["dmvpn"]        = verify_dmvpn(dev)
-        dev_results["ospf"]         = verify_ospf(dev)
-        dev_results["routes"]       = verify_routes(dev)
-        dev_results["vrrp"]         = verify_vrrp(dev)
-        dev_results["nat"]          = verify_nat(dev)
-        dev_results["connectivity"] = verify_connectivity(dev)
-
-        all_results[dev] = dev_results
-
-    return all_results
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# REPORTE FINAL
-# ──────────────────────────────────────────────────────────────────────────────
-
-def print_summary(all_results: dict):
-    """Imprime resumen visual de resultados."""
-    banner("RESUMEN DE VALIDACIONES")
-
-    total_checks = 0
-    passed_checks = 0
-
-    for dev_name, modules in all_results.items():
-        section(f"Dispositivo: {dev_name}")
-
-        # DMVPN
-        dmvpn = modules.get("dmvpn", {})
-        if dmvpn.get("tunnel_up"):
-            ok(f"Tunnel1: UP");  passed_checks += 1
-        else:
-            fail(f"Tunnel1: DOWN o no verificado")
-        total_checks += 1
-
-        if dmvpn.get("dmvpn_up"):
-            ok(f"DMVPN: activo ({len(dmvpn.get('peers',[]))} peers)")
-            passed_checks += 1
-        else:
-            fail(f"DMVPN: sin peers activos")
-        total_checks += 1
-
-        # OSPF
-        ospf = modules.get("ospf", {})
-        if ospf.get("ospf_up"):
-            ok(f"OSPF: {len(ospf.get('neighbors',[]))} vecino(s) FULL")
-            passed_checks += 1
-        else:
-            fail(f"OSPF: sin vecinos en FULL")
-        total_checks += 1
-
-        # Rutas
-        routes = modules.get("routes", {})
-        ok_routes   = len(routes.get("routes_ok", []))
-        miss_routes = len(routes.get("routes_missing", []))
-        if miss_routes == 0:
-            ok(f"RUTAS: todas las rutas esperadas presentes ({ok_routes})")
-            passed_checks += 1
-        else:
-            warn(f"RUTAS: {ok_routes} presentes, {miss_routes} faltantes")
-        total_checks += 1
-
-        # VRRP
-        vrrp = modules.get("vrrp", {})
-        if vrrp.get("vrrp_groups"):
-            ok(f"VRRP: grupos {vrrp['vrrp_groups']} activos")
-            passed_checks += 1
-        else:
-            fail(f"VRRP: sin grupos detectados")
-        total_checks += 1
-
-        # NAT
-        nat = modules.get("nat", {})
-        if nat.get("nat_active"):
-            ok(f"NAT: configurado y activo")
-            passed_checks += 1
-        else:
-            warn(f"NAT: no confirmado")
-        total_checks += 1
-
-        # Conectividad
-        conn = modules.get("connectivity", {})
-        ping_results = conn.get("ping_results", {})
-        success_pings = sum(1 for v in ping_results.values() if v > 0)
-        total_pings   = len(ping_results)
-        if total_pings > 0:
-            if success_pings == total_pings:
-                ok(f"CONECTIVIDAD: {success_pings}/{total_pings} destinos alcanzables")
-                passed_checks += 1
-            else:
-                warn(f"CONECTIVIDAD: {success_pings}/{total_pings} destinos alcanzables")
-                passed_checks += 0.5
-        total_checks += 1
-
-    # Score final
-    pct = (passed_checks / total_checks * 100) if total_checks > 0 else 0
+ 
+def run_scenario(key):
+    s = SCENARIOS[key]
+    node   = s["node"]
+    intf   = s["int"]
+    verify = s["verify"]
+ 
+    print(f"\n  {'='*68}")
+    print(f"  ESCENARIO {key}: {s['name']}")
+    print(f"  {s['desc']}")
+    print(f"  {'='*68}")
+ 
+    # ── ESTADO ANTES ──────────────────────────────────────────────────────
+    sep("ESTADO ANTES de la caída")
+    for v in verify:
+        if DEVICES.get(v, {}).get("vrrp"):
+            verify_vrrp(v)
+        verify_connectivity(v)
+ 
+    # ── SIMULACIÓN DE CAÍDA ───────────────────────────────────────────────
+    sep(f"SIMULANDO CAÍDA → {node} {intf} shutdown")
+    try:
+        ssh = connect(node)
+        out = shell_cmds(ssh, [
+            "conf t",
+            f"interface {intf}",
+            "shutdown",
+            "end",
+        ], wait=1.5)
+        ok(f"{node} {intf} → shutdown ejecutado")
+        info(f"Output:\n{out[-300:]}")
+        ssh.close()
+    except Exception as e:
+        fail(f"No se pudo ejecutar shutdown: {e}")
+        return
+ 
+    # ── ESPERAR RECONVERGENCIA ─────────────────────────────────────────────
+    print(f"\n  Esperando reconvergencia (15s)...", end="", flush=True)
+    for _ in range(15):
+        time.sleep(1)
+        print(".", end="", flush=True)
     print()
-    print(f"{BOLD}{'═'*60}{RESET}")
-    score_color = GREEN if pct >= 80 else (YELLOW if pct >= 50 else RED)
-    print(f"{BOLD}{score_color}  RESULTADO: {passed_checks:.1f}/{total_checks} validaciones — {pct:.1f}%{RESET}")
-    print(f"{BOLD}{'═'*60}{RESET}\n")
-
-
-def save_report(all_results: dict):
-    """Guarda reporte en archivo JSON y log .txt."""
-    ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    
-    # JSON (sin raw para legibilidad)
-    clean_results = {}
-    for dev, mods in all_results.items():
-        clean_results[dev] = {}
-        for mod, data in mods.items():
-            clean_copy = {k: v for k, v in data.items() if k != "raw"}
-            clean_results[dev][mod] = clean_copy
-
-    json_file = f"reporte_lab2_{ts}.json"
-    with open(json_file, "w", encoding="utf-8") as f:
-        json.dump(clean_results, f, indent=2, ensure_ascii=False)
-    ok(f"Reporte JSON guardado: {json_file}")
-
-    # Log .txt
-    log_file = f"log_lab2_{ts}.txt"
-    with open(log_file, "w", encoding="utf-8") as f:
-        f.write(f"LABORATORIO 2 – LOG DE VERIFICACIÓN\n")
-        f.write(f"Fecha: {datetime.datetime.now()}\n")
-        f.write("=" * 70 + "\n\n")
-        for line in LOG_LINES:
-            # Limpiar códigos ANSI para el archivo
-            clean_line = re.sub(r'\033\[[0-9;]*m', '', line)
-            f.write(clean_line + "\n")
-    ok(f"Log guardado: {log_file}")
-
-
+ 
+    # ── ESTADO DESPUÉS ────────────────────────────────────────────────────
+    sep("ESTADO DESPUÉS de la caída")
+    for v in verify:
+        if DEVICES.get(v, {}).get("vrrp"):
+            verify_vrrp(v)
+        verify_connectivity(v)
+ 
+    # ── RESTAURAR ─────────────────────────────────────────────────────────
+    sep(f"RESTAURANDO → {node} {intf} no shutdown")
+    try:
+        ssh = connect(node)
+        out = shell_cmds(ssh, [
+            "conf t",
+            f"interface {intf}",
+            "no shutdown",
+            "end",
+        ], wait=1.5)
+        ok(f"{node} {intf} → no shutdown ejecutado")
+        ssh.close()
+    except Exception as e:
+        warn(f"No se pudo restaurar: {e}")
+        warn(f"Restaurar manualmente: conf t → interface {intf} → no shutdown")
+ 
+    print(f"\n  Esperando que levante (10s)...", end="", flush=True)
+    for _ in range(10):
+        time.sleep(1)
+        print(".", end="", flush=True)
+    print()
+    ok("Escenario finalizado — interfaz restaurada")
+ 
+ 
 # ──────────────────────────────────────────────────────────────────────────────
-# MENÚ INTERACTIVO
+# MÓDULO 8 — VERIFICACIÓN COMPLETA
 # ──────────────────────────────────────────────────────────────────────────────
-
-def select_devices() -> list:
-    """Permite al usuario elegir qué dispositivos verificar."""
-    print(f"\n{BOLD}Dispositivos disponibles:{RESET}")
-    dev_list = list(DEVICES.keys())
-    for i, d in enumerate(dev_list, 1):
-        role = DEVICES[d]["role"]
-        host = DEVICES[d]["host"]
-        tag = f"{GREEN}[NUEVO]{RESET}" if "BRANCH2" in d else ""
-        print(f"  [{i}] {d:<20} {host:<15} {role} {tag}")
-    print(f"  [A] Todos los dispositivos")
-    print(f"  [B] Solo Branch2 (CPE-BRANCH2 + CPE-BRANCH2-BK) [por defecto]")
-
-    choice = input(f"\n{BOLD}Selección (número, A o B): {RESET}").strip().upper()
-    if choice == "A":
-        return dev_list
-    elif choice == "B" or choice == "":
-        return BRANCH2_DEVICES
-    else:
-        try:
-            idx = int(choice) - 1
-            if 0 <= idx < len(dev_list):
-                return [dev_list[idx]]
-        except ValueError:
-            pass
-    return BRANCH2_DEVICES
-
-
-def main_menu():
-    """Menú principal interactivo."""
-    last_results = {}
-
+ 
+def full_verify(nodes=None):
+    if nodes is None:
+        nodes = ["CPE-HQ", "CPE-HQ-BK",
+                 "CPE-BRANCH", "CPE-BRANCH-BK",
+                 "CPE-BRANCH2", "CPE-BRANCH2-BK"]
+    for node in nodes:
+        print(f"\n  {'#'*68}")
+        print(f"  # {node}  —  {DEVICES.get(node,{}).get('role','')}")
+        print(f"  {'#'*68}")
+        verify_dmvpn(node)
+        verify_ospf(node)
+        verify_routes(node)
+        verify_vrrp(node)
+        verify_nat(node)
+        verify_connectivity(node)
+ 
+ 
+# ──────────────────────────────────────────────────────────────────────────────
+# MENÚ
+# ──────────────────────────────────────────────────────────────────────────────
+ 
+def pick_node(label="Nodo"):
+    cpes = list(DEVICES.keys())
+    print(f"\n  {label}:")
+    for i, n in enumerate(cpes, 1):
+        print(f"    [{i}] {n}  ({DEVICES[n].get('role','')})")
+    try:
+        return cpes[int(input("  Selección: ").strip()) - 1]
+    except (ValueError, IndexError):
+        return cpes[0]
+ 
+ 
+def menu():
     while True:
-        banner("LABORATORIO 2 – VERIFICADOR AUTOMATIZADO", char="═")
-        print(f"  {CYAN}Topología: DMVPN Branch2 (CPE-BRANCH2 / CPE-BRANCH2-BK){RESET}")
-        print(f"  {CYAN}Protocolo de routing: OSPF área 0 | IPsec DMVPN | VRRP | NAT{RESET}\n")
-
-        print(f"  {BOLD}[1]{RESET} Verificar Túnel DMVPN")
-        print(f"  {BOLD}[2]{RESET} Verificar OSPF (vecindades)")
-        print(f"  {BOLD}[3]{RESET} Verificar Tabla de Rutas")
-        print(f"  {BOLD}[4]{RESET} Verificar VRRP")
-        print(f"  {BOLD}[5]{RESET} Verificar NAT")
-        print(f"  {BOLD}[6]{RESET} Verificar Conectividad (Ping / Traceroute)")
-        print(f"  {BOLD}{GREEN}[7]{RESET} Ejecutar Validación Completa")
-        print(f"  {BOLD}[8]{RESET} Ver Resumen de Últimos Resultados")
-        print(f"  {BOLD}[9]{RESET} Guardar Reporte (JSON + Log)")
-        print(f"  {BOLD}[0]{RESET} Salir\n")
-
-        choice = input(f"{BOLD}  Opción: {RESET}").strip()
-
-        if choice == "0":
-            print(f"\n{CYAN}  Saliendo... ¡hasta pronto!{RESET}\n")
+        print("\n" + "="*70)
+        print("  LAB 2 — VERIFICADOR AUTOMATIZADO")
+        print(f"  Lab: {LAB}")
+        print("="*70)
+        print()
+        print("  ── VERIFICACIONES ──────────────────────────────────")
+        print("  [1] DMVPN (túnel + NHRP + NHS)")
+        print("  [2] OSPF  (vecinos + área + cost)")
+        print("  [3] Rutas (tabla de routing)")
+        print("  [4] VRRP  (grupos + estado MASTER/BACKUP)")
+        print("  [5] NAT   (pool + traducciones)")
+        print("  [6] Conectividad (ping + traceroute)")
+        print("  [7] Verificación completa de un nodo")
+        print("  [8] Verificación completa de TODOS los CPEs")
+        print()
+        print("  ── REDUNDANCIA — ESCENARIOS DE CAÍDA ───────────────")
+        print("  [A] Caída HUB Principal        (CPE-HQ   → e0/1 shutdown)")
+        print("  [B] Caída WAN Spoke Branch2    (CPE-BRANCH2 → e0/1 shutdown)")
+        print("  [C] Caída WAN Movistar→Branch2 (M3 → e0/3 shutdown)")
+        print("  [D] Caída WAN Claro→Branch2-BK (C5 → e0/1 shutdown)")
+        print("  [E] Caída LAN MASTER HQ        (CPE-HQ   → e0/2 shutdown)")
+        print("  [F] Caída LAN MASTER Branch2   (CPE-BRANCH2 → e0/2 shutdown)")
+        print()
+        print("  [0] Salir")
+        print()
+ 
+        op = input("  Opción: ").strip().upper()
+ 
+        if op == "0":
             break
-
-        elif choice in ("1", "2", "3", "4", "5", "6"):
-            devices = select_devices()
-            results = {}
-            for dev in devices:
-                if choice == "1":
-                    results[dev] = verify_dmvpn(dev)
-                elif choice == "2":
-                    results[dev] = verify_ospf(dev)
-                elif choice == "3":
-                    results[dev] = verify_routes(dev)
-                elif choice == "4":
-                    results[dev] = verify_vrrp(dev)
-                elif choice == "5":
-                    results[dev] = verify_nat(dev)
-                elif choice == "6":
-                    results[dev] = verify_connectivity(dev)
-            last_results.update(results)
-
-        elif choice == "7":
-            devices = select_devices()
-            last_results = run_full_validation(devices)
-            print_summary(last_results)
-
-        elif choice == "8":
-            if last_results:
-                print_summary(last_results)
-            else:
-                warn("No hay resultados previos. Ejecuta primero una verificación.")
-
-        elif choice == "9":
-            if last_results:
-                save_report(last_results)
-            else:
-                warn("No hay resultados para guardar. Ejecuta primero una verificación.")
-
+        elif op in ["1","2","3","4","5","6","7"]:
+            node = pick_node()
+            fns = {
+                "1": verify_dmvpn,
+                "2": verify_ospf,
+                "3": verify_routes,
+                "4": verify_vrrp,
+                "5": verify_nat,
+                "6": verify_connectivity,
+                "7": lambda n: (verify_dmvpn(n), verify_ospf(n),
+                                verify_routes(n), verify_vrrp(n),
+                                verify_nat(n), verify_connectivity(n)),
+            }
+            fns[op](node)
+        elif op == "8":
+            full_verify()
+        elif op in SCENARIOS:
+            run_scenario(op)
         else:
-            warn("Opción inválida. Intenta de nuevo.")
-
-        input(f"\n  {YELLOW}[Presiona Enter para continuar...]{RESET}")
-        # Limpiar pantalla (compatible Windows/Linux)
-        os.system("cls" if os.name == "nt" else "clear")
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# ENTRY POINT
-# ──────────────────────────────────────────────────────────────────────────────
-
+            warn("Opción inválida")
+ 
+        input("\n  [Enter para continuar...]")
+ 
+ 
 if __name__ == "__main__":
-    # Si se pasa argumento 'auto', ejecuta validación completa sin menú
     if len(sys.argv) > 1 and sys.argv[1] == "auto":
-        results = run_full_validation(BRANCH2_DEVICES)
-        print_summary(results)
-        save_report(results)
+        full_verify()
     else:
-        main_menu()
+        menu()
+ 
