@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 01:23:04 UTC Sat Apr 25 2026 by admin
-!
 version 17.12
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -49,45 +47,44 @@ ipv6 cef
 !
 !
 !
-mpls label protocol ldp
 multilink bundle-name authenticated
 !
 !
-crypto pki trustpoint TP-self-signed-12
+crypto pki trustpoint TP-self-signed-20
  enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-12
+ subject-name cn=IOS-Self-Signed-Certificate-20
  revocation-check none
- rsakeypair TP-self-signed-12
+ rsakeypair TP-self-signed-20
  hash sha256
 !
 !
-crypto pki certificate chain TP-self-signed-12
+crypto pki certificate chain TP-self-signed-20
  certificate self-signed 01
   30820320 30820208 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
   29312730 25060355 04030C1E 494F532D 53656C66 2D536967 6E65642D 43657274 
-  69666963 6174652D 3132301E 170D3236 30343235 30313230 35365A17 0D333630 
-  34323430 31323035 365A3029 31273025 06035504 030C1E49 4F532D53 656C662D 
-  5369676E 65642D43 65727469 66696361 74652D31 32308201 22300D06 092A8648 
-  86F70D01 01010500 0382010F 00308201 0A028201 010082DD AADDC095 D23EF671 
-  A3692807 411DFD4C 62C29535 716BF13D 9D650F31 EA0E68BE 48FD1ED4 0705146C 
-  21FAC216 D8C65C7B CBE62BA4 382E987E 13249CBD 04157D83 6E715BDA 396F016E 
-  C8340827 BA3B1CFA 114B0B4C 4B2E3BEC D7E49E5D EF9A9E8D 4C06653C 82F6435E 
-  EE445378 13522807 F18778AF 1E024A14 98C883EC E1F8C02D 0152DC84 D0D7CC6F 
-  7398696F E41CC57D 075D9CC9 E4959B03 6B1E777B 391EA7D7 49368729 7D421DDC 
-  FF5F910B 59C8E5B0 F1420AF7 3691F3F5 CBD4E0C5 52C7A727 0817D341 F98FAFE6 
-  14654939 36331CEC 4DEAF0A0 0C11BA6D 52BBC261 27B68BB3 175D265A F3900156 
-  655A791D 4A06B037 18713F10 BBDBFC84 CA23D1AD 44410203 010001A3 53305130 
-  1D060355 1D0E0416 04143DEF EF982E42 6C20CB6B 9F580541 1944C3C0 EC68301F 
-  0603551D 23041830 1680143D EFEF982E 426C20CB 6B9F5805 411944C3 C0EC6830 
+  69666963 6174652D 3230301E 170D3236 30353131 30323235 33315A17 0D333630 
+  35313030 32323533 315A3029 31273025 06035504 030C1E49 4F532D53 656C662D 
+  5369676E 65642D43 65727469 66696361 74652D32 30308201 22300D06 092A8648 
+  86F70D01 01010500 0382010F 00308201 0A028201 0100A836 3E4874CD F5294E18 
+  3BAB0F21 0678694D 9FFAB652 5C724D89 3D5B6BE0 CDB75540 1C2F76A2 20EFDFD9 
+  3B01ACEF FBE61E7F 00FFF52C 5C0DC5E6 0FB4E7DB CB55D26D A495EC4C E0C2DB29 
+  D5D4801C 0508754B 53A0DD5A DADD7548 23258EB5 36567E61 4123F523 FB96DEFA 
+  E2C44574 D9A26FAF EFA7B624 187016B0 FA623CD6 D6B4CE08 633E7FD9 98427749 
+  395BC03C 550F3999 DF6B5E50 610ECE54 7AD7251B 8DE236F1 C37BFD4B A86CF3FC 
+  FEA8AA92 DD3C69CE AB3BD085 E8324D11 365E3D9E 46CD2179 350575A2 69A63F69 
+  74FD114E 2F23B484 D1B15B2A 10409239 F57EA345 B115F0BC 48F10C28 90C5FD75 
+  E8B3185B 5464CCBE 355524AC D3F76986 953D5076 361F0203 010001A3 53305130 
+  1D060355 1D0E0416 04140C2B E9F54D93 0EE64E3F B812A0C9 F43C70C9 5990301F 
+  0603551D 23041830 1680140C 2BE9F54D 930EE64E 3FB812A0 C9F43C70 C9599030 
   0F060355 1D130101 FF040530 030101FF 300D0609 2A864886 F70D0101 0B050003 
-  82010100 24F9AE9A E8E638EB E5C1329A 31031B94 278B560D 018FB538 258E2932 
-  B6AB88C8 72D40587 463876BD 0E35D747 68750995 213C0F3B 0D3C989D 73BA4FE0 
-  590B3498 46330B95 E869878D 061AEE4A A93A014B 722EC160 F711FDFE 948D6372 
-  F1001B97 D1844A9D 8E1B38DA 96AA97D8 863D40E1 0036D9A0 6FF2F943 A7696699 
-  67342D2F 492D81B4 2C4A91B5 4F8BF9FE ABAF4976 0FB65154 955DAA83 91A6CCEA 
-  A38AB1A7 0F9897E2 FCECD9A0 3827848F 5DDA0E7E AC41F295 8C1C401D 2A3E1368 
-  F5A184A9 2F383073 1EE88261 F7D446F3 A984CBA7 4A762D5A B1DD5C4A 74CB2F0C 
-  138ED170 559803A4 800B55EE C1E6B6E3 635CA0C7 7F25B772 660DEAC6 E8A9324A A7C4F8EA
+  82010100 84EB8796 910D75A3 8BAE99B1 F6F37F44 E869D99A 141995A8 FA8CC526 
+  5FF037F9 ED52D1BB 610729A6 32DC3EB0 2FDCDCC4 0A3F3536 34AEE9B9 8ED27719 
+  C58CE5A1 D535CD7C 7DC87AE6 5F5610B0 CF2B6A9C 35CBD3EE BF118D7F 848CD53B 
+  A9D4B689 64F808A4 B60EFAD8 A26499C6 8BC5CD1C 86CAB834 069C0E88 43805EB2 
+  69A5AF6D FB56788B 61D16367 3AE919EA 3FE05A1C E9741670 029B38B7 3780B938 
+  92853F37 5ABA31BE 3AD74DAC 5D774F41 B2965A1D DEA80757 C1128F16 4CD9B720 
+  AE6D42BB 18416FD1 F7EA8D66 6143A33E 0CB05F68 73ABAF56 C2E809A9 F161D5F6 
+  396629A2 80AACA29 ACA34F06 1F685BB1 8F953782 A0F438C4 87EBCB65 4ED696DB 42BB934D
   	quit
 !
 !
@@ -97,7 +94,7 @@ memory free low-watermark processor 55011
 spanning-tree mode rapid-pvst
 !
 !
-username admin privilege 15 secret 9 $9$Ty32aXXU1C6/gk$NkwLdGjaHdN1g2FyksaggxVoyc7rpdf8MJwTe8DHhkk
+username admin privilege 15 secret 9 $9$wJvpO3sooWkGz.$tm33ZSw.uSxOBPRNfijP9n60ved9BXbitd6K63pc/.g
 !
 !
 !
@@ -122,21 +119,33 @@ username admin privilege 15 secret 9 $9$Ty32aXXU1C6/gk$NkwLdGjaHdN1g2FyksaggxVoy
 interface Loopback0
  ip address 172.16.1.2 255.255.255.255
 !
+
 interface Ethernet0/1
- ip address 10.0.0.2 255.255.255.252
+ ip address 10.0.0.6 255.255.255.252
  ip ospf network point-to-point
- mpls ip
 !
 interface Ethernet0/2
- ip address 10.0.0.13 255.255.255.252
+ ip address 10.0.0.17 255.255.255.252
  ip ospf network point-to-point
- mpls ip
 !
 interface Ethernet0/3
  ip address 10.0.1.2 255.255.255.252
 !
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
 interface Ethernet1/1
- ip address 10.0.2.2 255.255.255.252
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
 !
 router ospf 10
  router-id 172.16.1.2
@@ -146,52 +155,32 @@ router ospf 10
  network 172.16.1.2 0.0.0.0 area 0
 !
 router bgp 100
- bgp router-id 172.16.1.22
- bgp cluster-id 1.1.1.1
+ bgp router-id 172.16.1.2
  bgp log-neighbor-changes
- neighbor 10.0.0.77 remote-as 300
- neighbor 10.0.0.77 description ENLACE-HACIA-AS300-INTERNET
- neighbor 172.16.1.1 remote-as 100
- neighbor 172.16.1.1 description iBGP-CLIENT-M1
- neighbor 172.16.1.1 update-source Loopback0
- neighbor 172.16.1.3 remote-as 100
- neighbor 172.16.1.3 description iBGP-PEER-RR-M3
- neighbor 172.16.1.3 update-source Loopback0
- neighbor 172.16.1.4 remote-as 100
- neighbor 172.16.1.4 description iBGP-CLIENT-M4
- neighbor 172.16.1.4 update-source Loopback0
+ no bgp default ipv4-unicast
  neighbor 10.0.1.1 remote-as 300
  neighbor 10.0.2.1 remote-as 400
- 
+ neighbor 172.16.1.1 remote-as 100
+ neighbor 172.16.1.1 update-source Loopback0
+ neighbor 172.16.1.3 remote-as 100
+ neighbor 172.16.1.3 update-source Loopback0
+ neighbor 172.16.1.4 remote-as 100
+ neighbor 172.16.1.4 update-source Loopback0
  !
  address-family ipv4
-  neighbor 10.0.0.77 activate
+  neighbor 10.0.1.1 activate
+  neighbor 10.0.1.1 route-map RM-EXTERNOS in
+  neighbor 10.0.1.1 route-map RM-PUB-MOVISTAR out
+  neighbor 10.0.2.1 activate
+  neighbor 10.0.2.1 route-map RM-EXTERNOS in
+  neighbor 10.0.2.1 route-map RM-PUB-MOVISTAR out
   neighbor 172.16.1.1 activate
-  neighbor 172.16.1.1 route-reflector-client
   neighbor 172.16.1.1 next-hop-self
   neighbor 172.16.1.3 activate
   neighbor 172.16.1.3 next-hop-self
   neighbor 172.16.1.4 activate
-  neighbor 172.16.1.4 route-reflector-client
   neighbor 172.16.1.4 next-hop-self
-  neighbor 10.0.1.1 activate
-  neighbor 10.0.1.1 route-map RM-PUB-MOVISTAR out
-  neighbor 10.0.1.1 route-map RM-EXTERNOS in
-  neighbor 10.0.2.1 activate
-  neighbor 10.0.2.1 route-map RM-PUB-MOVISTAR out
-  neighbor 10.0.2.1 route-map RM-EXTERNOS in
  exit-address-family
-!
-ip prefix-list PL-EXTERNOS seq 5 deny 200.0.0.0/29
-ip prefix-list PL-EXTERNOS seq 10 deny 200.0.1.0/29
-ip prefix-list PL-EXTERNOS seq 15 permit 0.0.0.0/0 le 32
-ip prefix-list PL-PUB-MOVISTAR seq 5 permit 200.0.0.0/29
-ip prefix-list PL-PUB-MOVISTAR seq 10 permit 200.0.1.0/29
-!
-route-map RM-PUB-MOVISTAR permit 10 
- match ip address prefix-list PL-PUB-MOVISTAR
-route-map RM-EXTERNOS permit 10 
- match ip address prefix-list PL-EXTERNOS
 !
 ip forward-protocol nd
 !
@@ -203,9 +192,22 @@ ip http secure-server
 ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
 ip ssh bulk-mode 131072
 !
+!
+ip prefix-list PL-EXTERNOS seq 5 deny 200.0.0.0/29
+ip prefix-list PL-EXTERNOS seq 10 deny 200.0.1.0/29
+ip prefix-list PL-EXTERNOS seq 15 permit 0.0.0.0/0 le 32
+!
+ip prefix-list PL-PUB-MOVISTAR seq 5 permit 200.0.0.0/29
+ip prefix-list PL-PUB-MOVISTAR seq 10 permit 200.0.1.0/29
+ip prefix-list PL-PUB-MOVISTAR seq 15 permit 200.0.2.0/29
 ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
 !
-mpls ldp router-id Loopback0 force
+route-map RM-PUB-MOVISTAR permit 10 
+ match ip address prefix-list PL-PUB-MOVISTAR
+!
+route-map RM-EXTERNOS permit 10 
+ match ip address prefix-list PL-EXTERNOS
+!
 !
 !
 !

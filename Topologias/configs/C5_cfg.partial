@@ -1,124 +1,12 @@
-
-!
-! Last configuration change at 20:42:44 UTC Sat Apr 25 2026 by admin
-!
-version 17.12
-service timestamps debug datetime msec
-service timestamps log datetime msec
-!
-hostname C5
-!
-boot-start-marker
-boot-end-marker
-!
-!
-vrf definition clab-mgmt
- description clab-mgmt
- !
- address-family ipv4
- exit-address-family
- !
- address-family ipv6
- exit-address-family
-!
-no aaa new-model
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-no ip domain lookup
-ip domain name lab
-ip cef
-login on-success log
-ipv6 unicast-routing
-ipv6 cef
-!
-!
-!
-!
-!
-!
-!
-!
-multilink bundle-name authenticated
-!
-!
-crypto pki trustpoint TP-self-signed-6
- enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-6
- revocation-check none
- rsakeypair TP-self-signed-6
- hash sha256
-!
-!
-crypto pki certificate chain TP-self-signed-6
- certificate self-signed 01
-  3082031E 30820206 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
-  28312630 24060355 04030C1D 494F532D 53656C66 2D536967 6E65642D 43657274 
-  69666963 6174652D 36301E17 0D323630 34323530 38313131 305A170D 33363034 
-  32343038 31313130 5A302831 26302406 03550403 0C1D494F 532D5365 6C662D53 
-  69676E65 642D4365 72746966 69636174 652D3630 82012230 0D06092A 864886F7 
-  0D010101 05000382 010F0030 82010A02 82010100 9898CE39 98BEB1AB 9451A1CB 
-  6F92673F F204EDDB 9A093704 38C251D7 A6197B25 8FE0C680 E0248900 CDC52986 
-  D77CAE78 76EF0FF9 D3986BAB C580338F 4079A91C BBCFE817 102B041C 44406677 
-  C08B37F5 041DCA4B 015C3A05 F9617508 C4124856 79EEE89C 963C79DE FC66DD43 
-  1BAA3BB9 11676394 03A15196 9AF1B1D8 FBF96F9F 546E373C 90B7AD3B 3BBD9450 
-  05CEA569 1CA18522 7F9E2181 0D8E6357 9DC83FB6 0CB5B1C3 6417A68E 28CB5E73 
-  E47B04C8 8F67455F A373FB61 924864C7 A2D4F776 CBF2422D CD8D2052 831621C1 
-  BC1A75F1 C4D4DEB2 8C8E7A23 97AA5099 0CEDEE37 E4EE412C 114F1390 AC469D64 
-  91723C55 8BB36E1B 7D63EFF2 3C6E626D F2764C0D 02030100 01A35330 51301D06 
-  03551D0E 04160414 5B13BF8E 297BC213 370694AF 575343BB CE891A47 301F0603 
-  551D2304 18301680 145B13BF 8E297BC2 13370694 AF575343 BBCE891A 47300F06 
-  03551D13 0101FF04 05300301 01FF300D 06092A86 4886F70D 01010B05 00038201 
-  010007AE 900A8528 27AF71D0 45F50A69 ECB48955 53F52E65 B89BA09C 486D210C 
-  DD4100FC AA000098 E0DB2A6B 5CD6B641 39BF829B 6EC4DA87 4DAAF3F2 01E4F0D8 
-  FC197649 88DD9339 B614437E B98C9419 95F62784 B13825EE 2420436E E6BD44B1 
-  F4A3A779 4EF8EEE4 AD860367 DC72A649 BCF7EB4E E90C9F77 D05C18EC 5D4CAF58 
-  F8715510 4579EC09 025A9120 1647F3E0 B2A3ADFD 47CC6DB5 4A48D03B 29EFE310 
-  E0665697 C1FBC0FE 7254F28E A125E6A0 3F4A981F 8850CC78 D89D4424 AF7C6EDF 
-  739C4E20 70C0D16B FABC9814 F73A04CE 217128D6 F3EA0F75 BB24E4CB 95252147 
-  C0875877 51BA87B1 F223A777 C788B902 DCA353AA 8D528B63 A47D4643 A0FC4771 F671
-  	quit
-!
-!
-memory free low-watermark processor 55011
-!
-!
-spanning-tree mode rapid-pvst
-!
-!
-username admin privilege 15 secret 9 $9$qKeXIV.ivC6Y6E$RlYO1ehaSg23KM6fsQKsnLU6c6/r1ClA74BmK0FEpIU
-!
-!
-!
-!
-!
-! 
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
 interface Loopback0
+ ip address 172.16.2.5 255.255.255.255
+!
+interface Ethernet0/1
+ ip address 10.0.0.50 255.255.255.252
+!
+interface Ethernet0/2
+ ip address 10.0.0.38 255.255.255.252
+!interface Loopback0
  ip address 172.16.2.5 255.255.255.255
 !
 interface Ethernet0/1
@@ -157,13 +45,14 @@ router ospf 1
 router bgp 200
  bgp router-id 172.16.2.5
  bgp log-neighbor-changes
- neighbor 10.0.0.66 remote-as 65001
- neighbor 10.0.0.66 description Conexion C5_HQB
+ no bgp default ipv4-unicast
+ neighbor 172.16.2.1 remote-as 200
+ neighbor 172.16.2.1 update-source Loopback0
+ neighbor 172.16.2.2 remote-as 200
+ neighbor 172.16.2.2 update-source Loopback0
  neighbor 172.16.2.3 remote-as 200
- neighbor 172.16.2.3 description RR-PRIMARIO-C3
  neighbor 172.16.2.3 update-source Loopback0
  neighbor 172.16.2.4 remote-as 200
- neighbor 172.16.2.4 description RR-SECUNDARIO-C4
  neighbor 172.16.2.4 update-source Loopback0
  !
  address-family ipv4

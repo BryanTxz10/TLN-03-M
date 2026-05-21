@@ -1,5 +1,6 @@
+
 !
-! Last configuration change at 04:47:51 UTC Sun May 17 2026
+! Last configuration change at 04:47:37 UTC Mon May 18 2026
 !
 version 17.12
 service timestamps debug datetime msec
@@ -32,7 +33,7 @@ no aaa new-model
 !
 !
 !
-!         
+!
 !
 no ip domain lookup
 ip domain name lab
@@ -44,7 +45,7 @@ ipv6 cef
 !
 !
 !
-!         
+!
 !
 !
 !
@@ -86,7 +87,7 @@ crypto pki certificate chain TP-self-signed-10
   E841B077 2A80ACD6 D13C3731 CF7A69F1 669FBD8A 39C99225 F4FDA015 B36EFD6D 
   5AF2F2FB 231C78FF 412B54CF 7D6D75CF A31873CF C31074B4 6F8FF547 444D1C9D 
   CDFD8571 3829EE32 38DED8F0 1E946959 208EC869 0965238A 203F1703 F7047B47 8EAFD1CD
-        quit
+  	quit
 !
 !
 memory free low-watermark processor 55011
@@ -104,7 +105,7 @@ username admin privilege 15 secret 9 $9$pD4KBnmlCVwcXE$wGWVoj16jiGnwkNS6urgDR7Yj
 track 100 ip sla 1 reachability
  delay down 10 up 20
 !
-!         
+! 
 !
 !
 !
@@ -116,7 +117,7 @@ crypto isakmp policy 10
  encryption aes
  hash sha
  authentication pre-share
- group 14 
+ group 14
  lifetime 1000
 crypto isakmp key TLN03 address 0.0.0.0        
 !
@@ -128,7 +129,7 @@ crypto ipsec profile PF-TO-HQ
 !
 !
 !
-!         
+!
 !
 !
 interface Loopback0
@@ -171,7 +172,7 @@ interface Ethernet0/2.5
  ip nat inside
  vrrp 5 ip 192.168.5.1
  vrrp 5 priority 95
-!         
+!
 interface Ethernet0/2.15
  encapsulation dot1Q 15
  ip address 192.168.15.3 255.255.255.0
@@ -219,7 +220,7 @@ ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
 control-plane
 !
 !
-!         
+!
 line con 0
  logging synchronous
 line aux 0

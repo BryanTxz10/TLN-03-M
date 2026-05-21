@@ -1,4 +1,6 @@
-! Last configuration change at 04:46:57 UTC Sun May 17 2026
+
+!
+! Last configuration change at 04:49:24 UTC Mon May 18 2026
 !
 version 17.12
 service timestamps debug datetime msec
@@ -31,7 +33,7 @@ no aaa new-model
 !
 !
 !
-!         
+!
 !
 no ip domain lookup
 ip domain name lab
@@ -43,7 +45,7 @@ ipv6 cef
 !
 !
 !
-!         
+!
 !
 !
 !
@@ -85,7 +87,7 @@ crypto pki certificate chain TP-self-signed-13
   AE10913D D0811F8F 8C4DD775 9CFD1109 7D2541DE A5A76379 187FC3A2 D96C1C62 
   9FF0CAB9 945D1B89 356B51BE AC41E533 9C84F368 099A4F1E 50DA8904 7D97827E 
   5084E1E9 E3DD0246 F0B26136 EC8C27F8 0C88B4D0 D891B318 DE3DCA46 B7D4C366 6E8918DC
-        quit
+  	quit
 !
 !
 memory free low-watermark processor 55011
@@ -103,7 +105,7 @@ username admin privilege 15 secret 9 $9$9CMuq8U0gkPOsE$IjoR.4jkwTEdCwD.F67ws6ZCG
 track 100 ip sla 1 reachability
  delay down 10 up 20
 !
-!         
+! 
 !
 !
 !
@@ -115,7 +117,7 @@ crypto isakmp policy 10
  encryption aes
  hash sha
  authentication pre-share
- group 14 
+ group 14
  lifetime 1000
 crypto isakmp key TLN03 address 190.0.0.1      
 crypto isakmp key TLN03 address 190.0.1.1      
@@ -127,7 +129,7 @@ crypto isakmp key TLN03 address 190.0.2.1
 !
 crypto ipsec profile PF-TO-BRANCH
 !
-!         
+!
 !
 !
 !
@@ -170,7 +172,7 @@ interface Ethernet0/2.10
  vrrp 10 ip 192.168.10.1
  vrrp 10 priority 110
  vrrp 10 track 100 decrement 20
-!         
+!
 interface Ethernet0/2.20
  encapsulation dot1Q 20
  ip address 192.168.20.2 255.255.255.0
@@ -182,7 +184,7 @@ interface Ethernet0/2.20
 interface Ethernet0/3
  no ip address
  shutdown
-!         
+!
 router ospf 10
  router-id 1.1.1.1
  passive-interface Ethernet0/2.10
@@ -218,7 +220,7 @@ ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
 !
 control-plane
 !
-!         
+!
 !
 line con 0
  logging synchronous
@@ -230,4 +232,4 @@ line vty 0 4
 !
 !
 !
-end       
+end

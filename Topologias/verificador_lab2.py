@@ -4,12 +4,9 @@
   LAB 2 - VERIFICADOR AUTOMATIZADO
   DMVPN / OSPF / VRRP / NAT / Redundancia
 ================================================================================
-  Conexión por nombre de contenedor (método del profesor):
-      clab-ISP-TDP-CLARO-IOL-<NODO>
- 
   Métodos Paramiko:
-    - exec_command()  → verificación (pc2.md Parte 4)
-    - invoke_shell()  → configuración / shutdown (pc2.md Parte 3)
+    - exec_command()  → verificación 
+    - invoke_shell()  → configuración
 ================================================================================
 """
  

@@ -1,6 +1,4 @@
-Current configuration : 5933 bytes
-!
-! Last configuration change at 02:11:35 UTC Sun May 17 2026
+
 !
 version 17.12
 service timestamps debug datetime msec
@@ -13,18 +11,17 @@ boot-end-marker
 !
 !
 vrf definition clab-mgmt
- description clab-mgmt
- !
- address-family ipv4
- exit-address-family
- !
- address-family ipv6
- exit-address-family
+ description clab-mgmt
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
 !
 no aaa new-model
 !
 !
-!         
 !
 !
 !
@@ -33,7 +30,8 @@ no aaa new-model
 !
 !
 !
-!         
+!
+!
 !
 no ip domain lookup
 ip domain name lab
@@ -42,7 +40,7 @@ login on-success log
 ipv6 unicast-routing
 ipv6 cef
 !
-!         
+!
 !
 !
 !
@@ -51,43 +49,43 @@ ipv6 cef
 !
 multilink bundle-name authenticated
 !
-!         
+!
 crypto pki trustpoint TP-self-signed-11
- enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-11
- revocation-check none
- rsakeypair TP-self-signed-11
- hash sha256
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-11
+ revocation-check none
+ rsakeypair TP-self-signed-11
+ hash sha256
 !
 !
 crypto pki certificate chain TP-self-signed-11
- certificate self-signed 01
-  30820320 30820208 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
-  29312730 25060355 04030C1E 494F532D 53656C66 2D536967 6E65642D 43657274 
-  69666963 6174652D 3131301E 170D3236 30353130 31353433 34395A17 0D333630 
-  35303931 35343334 395A3029 31273025 06035504 030C1E49 4F532D53 656C662D 
-  5369676E 65642D43 65727469 66696361 74652D31 31308201 22300D06 092A8648 
-  86F70D01 01010500 0382010F 00308201 0A028201 0100987C 2ED50027 D561F47E 
-  D27826E1 4A163756 20AC7571 5D74BBCF 64AEF0AF 92CCC2E4 4EC6B8A2 557D5B45 
-  037D4752 985272D9 DB1020A7 32B68F22 03551EF9 99ECACAD D8065C1F FB258D2D 
-  5C87DB90 CCF6B32B E1BAACBF 8C89E878 4F462788 4B74473D A4F1B6FC BAC8B989 
-  8828E239 5AC7099D 9ED6074B 292EEAC0 02FB2E07 477D7D8E E690C7F7 64C9A420 
-  7D6754B0 EE08D35E 20736B44 86092FC5 206DA65D 719A40BE 7FC8C9CF 166FD209 
-  6C1FB8FB 4E831FF2 7CEF49A2 1EE4DBBC E782D9BB DC3DB5E2 DC392C9C C921EA63 
-  6C9E8C3F ABD73326 063A8957 57A5E5D8 58721DD9 BD02CFCB DB2C5353 19A873F0 
-  D2FEA240 B61514D3 4D18D4D7 AEDE4CBB FD80E88D FB4D0203 010001A3 53305130 
-  1D060355 1D0E0416 04140990 3C00503A 55AEB1A9 BA6B15D1 EC62E5F4 4F47301F 
-  0603551D 23041830 16801409 903C0050 3A55AEB1 A9BA6B15 D1EC62E5 F44F4730 
-  0F060355 1D130101 FF040530 030101FF 300D0609 2A864886 F70D0101 0B050003 
-  82010100 4C9EE13C BA85C3C0 443BB616 9F269287 D9F10B18 1B8F3A74 732CF3CA 
-  9FF45DCB 8D69E042 E6B6CF52 10EAD2DD A6774FCB 8E588E32 10E89FA2 F7177866 
-  90DE49EA 8FB5D397 F5798DB2 EC7FCF48 3B94E98C 579A9E9D 63F034C9 FCFDCE5F 
-  3942216C 977C7B95 8F7E6A38 18AA05A3 1C67C7BF 7C6E5709 9C1691A9 B39EDAA3 
-  96C7E65A E3C99B8E C666F44E E4BDD514 36070791 EDDCEFA3 B2ED79FF 2EEB8AF7 
-  F0194B72 07603ABB 74A58927 8A43A79D 8C3A49CE 55401FCE 7C52E014 D364C789 
-  120A2A38 B35B0122 3E33A6E4 C57C7AFA D52CA925 CCCBA5A6 CA326656 A0E5E08E 
-  78A5C986 1DAF2AE1 CB08B740 07FCAD9A 5C6A4EF4 35001136 4D71D00E 5ACC3C83 CD9E2A73
-        quit
+ certificate self-signed 01
+  30820320 30820208 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
+  29312730 25060355 04030C1E 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 3131301E 170D3236 30353130 31353433 34395A17 0D333630 
+  35303931 35343334 395A3029 31273025 06035504 030C1E49 4F532D53 656C662D 
+  5369676E 65642D43 65727469 66696361 74652D31 31308201 22300D06 092A8648 
+  86F70D01 01010500 0382010F 00308201 0A028201 0100987C 2ED50027 D561F47E 
+  D27826E1 4A163756 20AC7571 5D74BBCF 64AEF0AF 92CCC2E4 4EC6B8A2 557D5B45 
+  037D4752 985272D9 DB1020A7 32B68F22 03551EF9 99ECACAD D8065C1F FB258D2D 
+  5C87DB90 CCF6B32B E1BAACBF 8C89E878 4F462788 4B74473D A4F1B6FC BAC8B989 
+  8828E239 5AC7099D 9ED6074B 292EEAC0 02FB2E07 477D7D8E E690C7F7 64C9A420 
+  7D6754B0 EE08D35E 20736B44 86092FC5 206DA65D 719A40BE 7FC8C9CF 166FD209 
+  6C1FB8FB 4E831FF2 7CEF49A2 1EE4DBBC E782D9BB DC3DB5E2 DC392C9C C921EA63 
+  6C9E8C3F ABD73326 063A8957 57A5E5D8 58721DD9 BD02CFCB DB2C5353 19A873F0 
+  D2FEA240 B61514D3 4D18D4D7 AEDE4CBB FD80E88D FB4D0203 010001A3 53305130 
+  1D060355 1D0E0416 04140990 3C00503A 55AEB1A9 BA6B15D1 EC62E5F4 4F47301F 
+  0603551D 23041830 16801409 903C0050 3A55AEB1 A9BA6B15 D1EC62E5 F44F4730 
+  0F060355 1D130101 FF040530 030101FF 300D0609 2A864886 F70D0101 0B050003 
+  82010100 4C9EE13C BA85C3C0 443BB616 9F269287 D9F10B18 1B8F3A74 732CF3CA 
+  9FF45DCB 8D69E042 E6B6CF52 10EAD2DD A6774FCB 8E588E32 10E89FA2 F7177866 
+  90DE49EA 8FB5D397 F5798DB2 EC7FCF48 3B94E98C 579A9E9D 63F034C9 FCFDCE5F 
+  3942216C 977C7B95 8F7E6A38 18AA05A3 1C67C7BF 7C6E5709 9C1691A9 B39EDAA3 
+  96C7E65A E3C99B8E C666F44E E4BDD514 36070791 EDDCEFA3 B2ED79FF 2EEB8AF7 
+  F0194B72 07603ABB 74A58927 8A43A79D 8C3A49CE 55401FCE 7C52E014 D364C789 
+  120A2A38 B35B0122 3E33A6E4 C57C7AFA D52CA925 CCCBA5A6 CA326656 A0E5E08E 
+  78A5C986 1DAF2AE1 CB08B740 07FCAD9A 5C6A4EF4 35001136 4D71D00E 5ACC3C83 CD9E2A73
+  	quit
 !
 !
 memory free low-watermark processor 55011
@@ -105,109 +103,109 @@ username admin privilege 15 secret 9 $9$SP8GLv2A7uWqSE$a8H1nRr.MPZ.XAx.LT6pCrtOV
 track 25 ip route 192.168.25.0 255.255.255.0 reachability
 !
 track 30 ip route 192.168.30.0 255.255.255.0 reachability
-!         
+!
 track 200 ip sla 2 reachability
- delay down 5 up 10
+ delay down 5 up 10
 !
-! 
-!
-!
+! 
 !
 !
-!         
+!
+!
+!
 !
 !
 crypto isakmp policy 10
- encryption aes
- hash sha
- authentication pre-share
- group 14
-crypto isakmp key TLN03 address 200.0.2.1      
-crypto isakmp key TLN03 address 200.0.0.1      
-crypto isakmp key TLN03 address 190.0.1.1      
-crypto isakmp key TLN03 address 190.0.0.1      
-crypto isakmp key TLN03 address 200.0.1.1      
-crypto isakmp key TLN03 address 190.0.2.1      
+ encryption aes
+ hash sha
+ authentication pre-share
+ group 14
+crypto isakmp key TLN03 address 200.0.2.1      
+crypto isakmp key TLN03 address 200.0.0.1      
+crypto isakmp key TLN03 address 190.0.1.1      
+crypto isakmp key TLN03 address 190.0.0.1      
+crypto isakmp key TLN03 address 200.0.1.1      
+crypto isakmp key TLN03 address 190.0.2.1      
 !
 !
-crypto ipsec transform-set TS-DMVPN esp-aes esp-sha-hmac 
- mode transport
-!         
+crypto ipsec transform-set TS-DMVPN esp-aes esp-sha-hmac 
+ mode transport
+!
 crypto ipsec profile PF-TO-HQ
- set transform-set TS-DMVPN 
+ set transform-set TS-DMVPN 
 !
 !
 !
 !
 !
 !
-!         
+!
 !
 interface Loopback0
- ip address 200.0.2.1 255.255.255.255
+ ip address 200.0.2.1 255.255.255.255
 !
 interface Tunnel1
- ip address 172.16.10.21 255.255.255.0
- no ip redirects
- ip mtu 1400
- ip nhrp authentication DMVPN123
- ip nhrp map 172.16.10.1 200.0.0.1
- ip nhrp map multicast 200.0.0.1
- ip nhrp map 172.16.10.2 190.0.1.1
- ip nhrp map multicast 190.0.1.1
- ip nhrp network-id 1
- ip nhrp nhs 172.16.10.1
- ip nhrp nhs 172.16.10.2
- ip tcp adjust-mss 1360
- ip ospf network broadcast
- ip ospf dead-interval 20
- ip ospf hello-interval 5
- ip ospf priority 0
- ip ospf cost 10
- tunnel source Loopback0
- tunnel mode gre multipoint
- tunnel key 100
- tunnel protection ipsec profile PF-TO-HQ
-!         
+ ip address 172.16.10.21 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication DMVPN123
+ ip nhrp map 172.16.10.1 200.0.0.1
+ ip nhrp map multicast 200.0.0.1
+ ip nhrp map 172.16.10.2 190.0.1.1
+ ip nhrp map multicast 190.0.1.1
+ ip nhrp network-id 1
+ ip nhrp nhs 172.16.10.1
+ ip nhrp nhs 172.16.10.2
+ ip tcp adjust-mss 1360
+ ip ospf network broadcast
+ ip ospf dead-interval 20
+ ip ospf hello-interval 5
+ ip ospf priority 0
+ ip ospf cost 10
+ tunnel source Loopback0
+ tunnel mode gre multipoint
+ tunnel key 100
+ tunnel protection ipsec profile PF-TO-HQ
+!
 interface Ethernet0/1
- ip address 10.0.0.74 255.255.255.252
- ip nat outside
+ ip address 10.0.0.74 255.255.255.252
+ ip nat outside
 !
 interface Ethernet0/2
- no ip address
+ no ip address
 !
 interface Ethernet0/2.25
- encapsulation dot1Q 25
- ip address 192.168.25.2 255.255.255.0
- ip nat inside
- vrrp 25 ip 192.168.25.1
- vrrp 25 priority 110
- vrrp 25 track 25
- vrrp 25 track 30
- vrrp 25 track 200 decrement 20
+ encapsulation dot1Q 25
+ ip address 192.168.25.2 255.255.255.0
+ ip nat inside
+ vrrp 25 ip 192.168.25.1
+ vrrp 25 priority 110
+ vrrp 25 track 25
+ vrrp 25 track 30
+ vrrp 25 track 200 decrement 20
 !
 interface Ethernet0/2.30
- encapsulation dot1Q 30
- ip address 192.168.30.2 255.255.255.0
- ip nat inside
- vrrp 30 ip 192.168.30.1
- vrrp 30 priority 110
- vrrp 30 track 25
- vrrp 30 track 30
- vrrp 30 track 200 decrement 20
+ encapsulation dot1Q 30
+ ip address 192.168.30.2 255.255.255.0
+ ip nat inside
+ vrrp 30 ip 192.168.30.1
+ vrrp 30 priority 110
+ vrrp 30 track 25
+ vrrp 30 track 30
+ vrrp 30 track 200 decrement 20
 !
 interface Ethernet0/3
- no ip address
- shutdown 
+ no ip address
+ shutdown
 !
 router ospf 10
- router-id 5.5.5.5
- passive-interface Ethernet0/2.25
- passive-interface Ethernet0/2.30
- network 172.16.10.0 0.0.0.255 area 0
- network 192.168.25.0 0.0.0.255 area 0
- network 192.168.30.0 0.0.0.255 area 0
-!         
+ router-id 5.5.5.5
+ passive-interface Ethernet0/2.25
+ passive-interface Ethernet0/2.30
+ network 172.16.10.0 0.0.0.255 area 0
+ network 192.168.25.0 0.0.0.255 area 0
+ network 192.168.30.0 0.0.0.255 area 0
+!
 ip forward-protocol nd
 !
 !
@@ -220,12 +218,12 @@ ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
 ip ssh bulk-mode 131072
 !
 ip sla 2
- icmp-echo 8.8.8.8 source-interface Loopback0
-  frequency 5
+ icmp-echo 8.8.8.8 source-interface Loopback0
+  frequency 5
 ip sla schedule 2 life forever start-time now
 ip access-list standard 10
- 10 permit 192.168.25.0 0.0.0.255
- 20 permit 192.168.30.0 0.0.0.255
+ 10 permit 192.168.25.0 0.0.0.255
+ 20 permit 192.168.30.0 0.0.0.255
 ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
 !
 !
@@ -234,16 +232,16 @@ ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
 control-plane
 !
 !
-!         
+!
 line con 0
- logging synchronous
+ logging synchronous
 line aux 0
 line vty 0 4
- login local
- transport input ssh
+ login local
+ transport input ssh
 !
 !
-!         
+!
 !
 end
 

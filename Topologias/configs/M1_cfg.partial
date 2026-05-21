@@ -1,145 +1,20 @@
-
-!
-! Last configuration change at 06:22:32 UTC Sat Apr 25 2026 by admin
-!
-version 17.12
-service timestamps debug datetime msec
-service timestamps log datetime msec
-!
-hostname M1
-!
-boot-start-marker
-boot-end-marker
-!
-!
-vrf definition clab-mgmt
- description clab-mgmt
- !
- address-family ipv4
- exit-address-family
- !
- address-family ipv6
- exit-address-family
-!
-no aaa new-model
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-no ip domain lookup
-ip domain name lab
-ip cef
-login on-success log
-ipv6 unicast-routing
-ipv6 cef
-!
-!
-!
-!
-!
-!
-!
-!
-mpls label protocol ldp
-multilink bundle-name authenticated
-!
-!
-crypto pki trustpoint TP-self-signed-11
- enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-11
- revocation-check none
- rsakeypair TP-self-signed-11
- hash sha256
-!
-!
-crypto pki certificate chain TP-self-signed-11
- certificate self-signed 01
-  30820320 30820208 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
-  29312730 25060355 04030C1E 494F532D 53656C66 2D536967 6E65642D 43657274 
-  69666963 6174652D 3131301E 170D3236 30343234 32303239 35395A17 0D333630 
-  34323332 30323935 395A3029 31273025 06035504 030C1E49 4F532D53 656C662D 
-  5369676E 65642D43 65727469 66696361 74652D31 31308201 22300D06 092A8648 
-  86F70D01 01010500 0382010F 00308201 0A028201 0100C1D7 86953F26 453EDA8E 
-  A961634B 39F8209E 8B96925D F6F85F4D CE42A1BE DACA057B CA04215C C681D2A7 
-  420C921F FD7A96A4 00E62F3A 42418262 FEBF09A2 E093BECC 995C4533 2A3FAAD2 
-  F8AF3820 125A074C BB251401 73F0C644 D2238325 D38E3C77 25FEAECF 2AAC5DF8 
-  BC3D6E33 60BA5BC5 22218C76 E2A926BB 5A3D798A 6910BE4E 5B5BEA80 BCF110A5 
-  A1B91CA7 D7F0A5C5 99DFDEB0 D5292993 87734410 95A04D98 DEC9287E EF6D838F 
-  893055F6 E6054DAE CD89C267 D8C09B54 564D58B0 9244F9ED 50C609FB 82354E2C 
-  405C05E0 A6CD4E7B 3CA57499 4132C6AA 7B3454E3 5421BD76 61FDE8D0 EBA0971E 
-  5B8D2F16 4179349D 5770ABD0 852FB8A0 336624A5 8F8F0203 010001A3 53305130 
-  1D060355 1D0E0416 0414587F 49729659 1A8AB779 AC8D3D60 0A434AA2 6E72301F 
-  0603551D 23041830 16801458 7F497296 591A8AB7 79AC8D3D 600A434A A26E7230 
-  0F060355 1D130101 FF040530 030101FF 300D0609 2A864886 F70D0101 0B050003 
-  82010100 300F072D 80A544FF 7FB98934 9353D05B D532CE2B A88BC28F 67E51059 
-  C3599AC7 9EA8198A 4A5DD3FF C9CF18DE 95AA2B75 5FFAB08C 4D853EFF E014F042 
-  941E90BA 379F62B1 DC057D18 955C2F40 1C48C9BD 3E8CF57C 262187C8 0563DD7D 
-  A94E3DA3 56A975A9 91058E14 B625A9C5 3B7C62EC 94C022D1 32A105F0 51C73A0B 
-  DA36C8F8 F49A3BF4 FEBF4D78 AC34762E 31082D0E 8F6D86BF 11E28F44 B8F9A443 
-  BA6DE2BA 7E5D5D1D 000A677B 058ADA90 1B5507CC E1854D98 E190DB13 D52E35CE 
-  4B7E8F28 64B71746 3323113A C70D4E23 618A00C6 368F0132 0860E303 D09328C7 
-  FD78AF79 1EBA83FA D209D3D6 81589461 6317876D 2F328824 780D39BA 31A6B203 43DF9A88
-  	quit
-!
-!
-memory free low-watermark processor 55011
-!
-!
-spanning-tree mode rapid-pvst
-!
-!
-username admin privilege 15 secret 9 $9$ubImO.YRoyO/p.$pu.WMkEacARhAk8eCHUeITh9XGdyM0th9kaD.IKFi4M
-!
-!
-!
-!
-!
-! 
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
 interface Loopback0
  ip address 172.16.1.1 255.255.255.255
 !
-
 interface Ethernet0/1
- ip address 10.0.0.1 255.255.255.252
- ip ospf network point-to-point
- mpls ip
-!
-interface Ethernet0/2
  ip address 10.0.0.5 255.255.255.252
  ip ospf network point-to-point
- mpls ip
 !
-interface Ethernet0/3
+interface Ethernet0/2
  ip address 10.0.0.9 255.255.255.252
  ip ospf network point-to-point
- mpls ip
+!
+interface Ethernet0/3
+ ip address 10.0.0.13 255.255.255.252
+ ip ospf network point-to-point
 !
 interface Ethernet1/0
- ip address 10.0.0.22 255.255.255.252
+ ip address 10.0.0.1 255.255.255.252
 !
 interface Ethernet1/1
  no ip address
@@ -158,19 +33,29 @@ router ospf 10
  prefix-suppression
  network 10.0.0.4 0.0.0.3 area 0
  network 10.0.0.8 0.0.0.3 area 0
+ network 10.0.0.12 0.0.0.3 area 0
  network 172.16.1.1 0.0.0.0 area 0
 !
 router bgp 100
  bgp router-id 172.16.1.1
  bgp log-neighbor-changes
- neighbor 10.0.0.21 remote-as 65001
- neighbor 10.0.0.21 description eBGP-CPE-HQ-PRINCIPAL
+ no bgp default ipv4-unicast
  neighbor 172.16.1.2 remote-as 100
  neighbor 172.16.1.2 update-source Loopback0
- neighbor 172.16.1.2 next-hop-self
  neighbor 172.16.1.3 remote-as 100
  neighbor 172.16.1.3 update-source Loopback0
- neighbor 172.16.1.3 next-hop-self
+ neighbor 172.16.1.4 remote-as 100
+ neighbor 172.16.1.4 update-source Loopback0
+ !
+ address-family ipv4
+  redistribute static route-map POOL_CLIENTES
+  neighbor 172.16.1.2 activate
+  neighbor 172.16.1.2 next-hop-self
+  neighbor 172.16.1.3 activate
+  neighbor 172.16.1.3 next-hop-self
+  neighbor 172.16.1.4 activate
+  neighbor 172.16.1.4 next-hop-self
+ exit-address-family
 !
 ip forward-protocol nd
 !
@@ -179,27 +64,7 @@ ip ftp username dubuntu
 ip ftp password 123456
 ip http server
 ip http secure-server
-ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
-ip ssh bulk-mode 131072
+ip route 200.0.0.0 255.255.255.248 10.0.0.2 tag 200
 !
-ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
-!
-mpls ldp router-id Loopback0 force
-!
-!
-!
-control-plane
-!
-!
-!
-line con 0
- logging synchronous
-line aux 0
-line vty 0 4
- login local
- transport input ssh
-!
-!
-!
-!
-end
+route-map POOL_CLIENTES permit 10 
+ match tag 200

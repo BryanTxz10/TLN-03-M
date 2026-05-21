@@ -1,6 +1,6 @@
-Current configuration : 5682 bytes
+
 !
-! Last configuration change at 04:47:53 UTC Sun May 17 2026
+! Last configuration change at 04:48:03 UTC Mon May 18 2026
 !
 version 17.12
 service timestamps debug datetime msec
@@ -33,7 +33,7 @@ no aaa new-model
 !
 !
 !
-!         
+!
 !
 no ip domain lookup
 ip domain name lab
@@ -45,7 +45,7 @@ ipv6 cef
 !
 !
 !
-!         
+!
 !
 !
 !
@@ -87,7 +87,7 @@ crypto pki certificate chain TP-self-signed-9
   5A5355B1 019C417C EF70B3D5 FDDF1194 46B1DD39 8443A754 94EBD1B6 EDFECA1C 
   EB2386C1 D31A6908 A02AAC17 8745D2D1 78E289EC 9492E16F 76169890 96106E5C 
   6680F41E 4A30C1B5 F9A96C3F 56DD9AF8 CC717775 F146CAAC 110103AB AB009FFB 24F5
-        quit
+  	quit
 !
 !
 memory free low-watermark processor 55011
@@ -105,7 +105,7 @@ username admin privilege 15 secret 9 $9$nqrxU6hlRks3ZU$aKNEupEXv/1aUGV2cHBzcFBHg
 track 100 ip sla 1 reachability
  delay down 10 up 20
 !
-!         
+! 
 !
 !
 !
@@ -117,7 +117,7 @@ crypto isakmp policy 10
  encryption aes
  hash sha
  authentication pre-share
- group 14 
+ group 14
  lifetime 1000
 crypto isakmp key TLN03 address 200.0.0.1      
 crypto isakmp key TLN03 address 190.0.1.1      
@@ -129,7 +129,7 @@ crypto isakmp key TLN03 address 190.0.2.1
 !
 !
 crypto ipsec profile PF-TO-HQ
-!         
+!
 !
 !
 !
@@ -163,7 +163,6 @@ interface Tunnel1
  tunnel key 100
  tunnel protection ipsec profile PF-TO-HQ
 !
-
 interface Ethernet0/1
  ip address 10.0.0.62 255.255.255.252
  ip nat outside
@@ -220,7 +219,7 @@ ip access-list standard 10
  10 permit 192.168.5.0 0.0.0.255
  20 permit 192.168.15.0 0.0.0.255
 ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
-!         
+!
 !
 !
 !

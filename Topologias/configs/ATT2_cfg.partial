@@ -33,4 +33,3 @@ neighbor 172.16.4.1 next-hop-self
 neighbor 172.16.4.3 activate
 neighbor 172.16.4.3 next-hop-self
 !
-

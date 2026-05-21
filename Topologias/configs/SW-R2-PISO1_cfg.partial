@@ -1,0 +1,166 @@
+
+!
+! Last configuration change at 17:07:20 UTC Sun May 17 2026
+!
+version 17.12
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname SW-R2-PISO1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition clab-mgmt
+ description clab-mgmt
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip audit notify log
+ip audit po max-events 100
+no ip domain lookup
+ip domain name lab
+ip cef
+login on-success log
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+vtp version 1
+multilink bundle-name authenticated
+!
+crypto pki trustpoint TP-self-signed-42
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-42
+ revocation-check none
+ rsakeypair TP-self-signed-42
+ hash sha256
+!
+!
+crypto pki certificate chain TP-self-signed-42
+ certificate self-signed 01
+  30820320 30820208 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
+  29312730 25060355 04030C1E 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 3432301E 170D3236 30353133 31383030 33305A17 0D333630 
+  35313231 38303033 305A3029 31273025 06035504 030C1E49 4F532D53 656C662D 
+  5369676E 65642D43 65727469 66696361 74652D34 32308201 22300D06 092A8648 
+  86F70D01 01010500 0382010F 00308201 0A028201 0100B23E A187FFCC FC120144 
+  6C2CD352 BF75B535 F248EBD0 FC7C5576 1129A9F1 C2AA621E 5F03F4E7 A2F88AD0 
+  90BC21F8 F969B0EE 85DC3438 4A1BDF06 EB2979C6 8C6FF307 75E0BBC9 C43617BB 
+  F83C8107 DD957827 A963B761 EB376A65 D0F8769C 912FA31B 1FE6CD50 4B8103D2 
+  1DBE972C A4AE075B C156646F A492481F E1EA3B87 D4A7940B A4B96EE6 C51A98C8 
+  11A6FDEF E06A223A F393C467 9B59E866 A4210FA6 B1819C6C 6A7DF19E AA8EE758 
+  08744856 07936319 4F6537D4 F930BA69 86305A58 C9792784 8773FCA4 905BB1E6 
+  9019D8A6 1D0B9B90 636835B6 F4463C7D EACC5A52 E8280D57 885973CE 1FFE9D48 
+  134F61AD DAC74C97 7C1F001A DC390874 3F0B4F1F FD650203 010001A3 53305130 
+  1D060355 1D0E0416 0414EDC2 F4A804FB 0BB93AF6 81F7BA32 FEB9A7BE 42F9301F 
+  0603551D 23041830 168014ED C2F4A804 FB0BB93A F681F7BA 32FEB9A7 BE42F930 
+  0F060355 1D130101 FF040530 030101FF 300D0609 2A864886 F70D0101 0B050003 
+  82010100 AD9BD95F DAAF00ED 56C8B23C 67D86026 215DCF67 3A121B51 0E7E7268 
+  889E1174 57554996 CC3B39F3 914CB1E2 37FCF27F B7097363 E44B0653 DD9A17C7 
+  15EF3FA8 7127E986 8858329D 7709AA78 A285D500 BFF23A7E 8EFC20B7 EA244880 
+  C423FC08 26948375 91DC737A CB11AD2D 8666F0FA B13C8EAD 28E86A31 85865960 
+  4D44E43E A8B47FD1 87009FA1 FFEF51D3 25002061 3D0C3667 48E410E5 C3572D31 
+  9119A3BE E306D130 EB037183 DBC8E52D 35A91507 24DF5F7F A8D9A827 F7A132CC 
+  631F6AC2 D5D515D5 72EE446B B72E299D 49851B30 AA22FDA0 B5D05636 FA8BB15D 
+  1FF9A8F6 36BD02CE A3615481 11B5EC6C 98A603B4 26F0005C 2A6BB3D9 23AADE33 EBC778E6
+  	quit
+!
+!
+memory free low-watermark processor 54375
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+username admin privilege 15 secret 9 $9$4xoaOL9Vsj83GE$Yvf3WqbwJTmQHx2wb6u70bn76ljxCz9kGYoAYBLl4ic
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+interface Ethernet0/1
+ description TRONCAL_HACIA_CPE_Y_BK
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/2
+ description TRONCAL_HACIA_CPE_Y_BK
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/3
+ switchport access vlan 25
+ switchport mode access
+ spanning-tree portfast
+!
+interface Ethernet1/0
+!
+interface Ethernet1/1
+ switchport access vlan 25
+ switchport mode access
+ spanning-tree portfast
+!
+interface Ethernet1/2
+ switchport access vlan 30
+ switchport mode access
+ spanning-tree portfast
+!
+interface Ethernet1/3
+ switchport access vlan 30
+ switchport mode access
+ spanning-tree portfast
+!
+ip forward-protocol nd
+!
+!
+ip http server
+ip http secure-server
+ip ssh bulk-mode 131072
+ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
+!
+!
+ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
+!
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+end

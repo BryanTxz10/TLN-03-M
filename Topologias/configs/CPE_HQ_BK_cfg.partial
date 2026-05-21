@@ -1,4 +1,6 @@
-Current configuration : 5498 bytes
+
+!
+! Last configuration change at 04:47:59 UTC Mon May 18 2026
 !
 version 17.12
 service timestamps debug datetime msec
@@ -20,7 +22,7 @@ vrf definition clab-mgmt
  exit-address-family
 !
 no aaa new-model
-!         
+!
 !
 !
 !
@@ -43,7 +45,7 @@ ipv6 cef
 !
 !
 !
-!         
+!
 !
 !
 !
@@ -85,7 +87,7 @@ crypto pki certificate chain TP-self-signed-14
   D62677F9 DEC78212 3329B8D1 CEC2A7E7 EB01D32F E57E688E F706C082 233EC8BA 
   957083B9 AAE55E7D 16D277A8 97D04567 5752BD0D 443BC9C5 D1C9600B 9D02810D 
   D4951DA4 C32F512D 2C3327CE FD0D6CF1 B4B5561B 380C117F 5B4CEFF4 4CFF413B B09C7165
-        quit
+  	quit
 !
 !
 memory free low-watermark processor 55011
@@ -110,7 +112,7 @@ track 100 ip sla 1 reachability
 !
 !
 !
-!         
+!
 crypto isakmp policy 10
  encryption aes
  hash sha
@@ -133,7 +135,7 @@ crypto ipsec profile PF-TO-BRANCH
 !
 !
 !
-!         
+!
 !
 interface Loopback0
  ip address 190.0.1.1 255.255.255.255
@@ -156,7 +158,7 @@ interface Tunnel1
  tunnel mode gre multipoint
  tunnel key 100
  tunnel protection ipsec profile PF-TO-BRANCH
-!         
+!
 
 interface Ethernet0/1
  ip address 10.0.0.66 255.255.255.252
@@ -220,7 +222,7 @@ ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
 !
 control-plane
 !
-!         
+!
 !
 line con 0
  logging synchronous

@@ -1,127 +1,6 @@
-
-!
-! Last configuration change at 08:27:14 UTC Sat Apr 25 2026 by admin
-!
-version 17.12
-service timestamps debug datetime msec
-service timestamps log datetime msec
-!
-hostname C4
-!
-boot-start-marker
-boot-end-marker
-!
-!
-vrf definition clab-mgmt
- description clab-mgmt
- !
- address-family ipv4
- exit-address-family
- !
- address-family ipv6
- exit-address-family
-!
-no aaa new-model
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-no ip domain lookup
-ip domain name lab
-ip cef
-login on-success log
-ipv6 unicast-routing
-ipv6 cef
-!
-!
-!
-!
-!
-!
-!
-!
-multilink bundle-name authenticated
-!
-!
-crypto pki trustpoint TP-self-signed-5
- enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-5
- revocation-check none
- rsakeypair TP-self-signed-5
- hash sha256
-!
-!
-crypto pki certificate chain TP-self-signed-5
- certificate self-signed 01
-  3082031E 30820206 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030 
-  28312630 24060355 04030C1D 494F532D 53656C66 2D536967 6E65642D 43657274 
-  69666963 6174652D 35301E17 0D323630 34323530 38313131 305A170D 33363034 
-  32343038 31313130 5A302831 26302406 03550403 0C1D494F 532D5365 6C662D53 
-  69676E65 642D4365 72746966 69636174 652D3530 82012230 0D06092A 864886F7 
-  0D010101 05000382 010F0030 82010A02 82010100 9EE932F8 CD4082D1 B065AD65 
-  0220E1CD 55192D64 8F46463F 081E9459 BA93A737 93C77F5F 8C2D5F55 83CEBF8B 
-  2A597B47 C778191C E457F536 0FABEE83 517BC35C 7D41E7A3 3530389C A388784E 
-  86A9AE3B 8AF79035 7D7C1C01 F2836738 799E99BD EF5CC95B 6B8F4D1A CA694F8C 
-  6444A8D4 80F4210E FB3A4083 723D5367 069C8E35 846E7894 C54FFD05 C6F85D53 
-  B7748798 827E22C5 2CEB49F5 6280B261 F63E7D37 2E3A296F 9ADB39C5 7FCBEB74 
-  6977F05F DB72B945 6B1AF0DC A69FDA82 DC3EA43D C480D84E BA12EBB6 E9ECC30E 
-  CCFE9ED7 F3189256 3FFF4C4F 51A8C913 D3B7AE90 02DB44B6 3E9F617E 1293162F 
-  7E578494 684AF1E7 E6CC1AA5 DCF9B85C 5E4D097B 02030100 01A35330 51301D06 
-  03551D0E 04160414 E23C2E96 D692EC42 B5E141C1 73CC8054 FB4E2946 301F0603 
-  551D2304 18301680 14E23C2E 96D692EC 42B5E141 C173CC80 54FB4E29 46300F06 
-  03551D13 0101FF04 05300301 01FF300D 06092A86 4886F70D 01010B05 00038201 
-  0100967D 1786A297 C87F0139 5060376B 6CB97B46 3233CDE5 EB61B49E EFE2519A 
-  6AE42189 500465D7 6880809C 22DF1AA9 AD707012 7494854F 29D17131 A2D5F92E 
-  F9DB0AE1 50F260BB 3119BAE7 7F2D924D DD7F7E94 4742BA5B 6CD1A8FC C0AA52AB 
-  CB598C49 B57FA8C8 D8439163 4633EF88 A3428E8C E0708D32 2EF3373E 2379EBD9 
-  3DD162F6 2BDCE2F5 BEB6DC98 01FA0E69 CFFF4679 90C5EA30 251935FB 0D99F3ED 
-  294E7EE6 5EF7002C 239A65AE 6F6E7A4C 1F9BCA5F 90E07683 C60FE079 BBECAF75 
-  7901FD36 8AE4B43B 6D1E4489 631EAA7E B9CA4A28 74398C34 1B33512D 77CC06AF 
-  ABC4B117 5B43199B E23DC4B4 F5B56150 192BDBAF EE83B134 EB23566B 3C266E40 957A
-  	quit
-!
-!
-memory free low-watermark processor 55011
-!
-!
-spanning-tree mode rapid-pvst
-!
-!
-username admin privilege 15 secret 9 $9$d9Wmh4lQ6vgty.$TBDWDlJ1aKRhlWfUVOgel/9k1Zn1kqa2ANwt9puGYsc
-!
-!
-!
-!
-!
-! 
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
 interface Loopback0
  ip address 172.16.2.4 255.255.255.255
 !
-
 interface Ethernet0/1
  ip address 10.0.0.45 255.255.255.252
  ip ospf network point-to-point
@@ -149,19 +28,16 @@ router ospf 1
 !
 router bgp 200
  bgp router-id 172.16.2.4
- bgp cluster-id 2.2.2.2
  bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 10.0.0.29 remote-as 100
  neighbor 172.16.2.1 remote-as 200
- neighbor 172.16.2.1 description iBGP-CLIENT-C1
  neighbor 172.16.2.1 update-source Loopback0
  neighbor 172.16.2.2 remote-as 200
- neighbor 172.16.2.2 description iBGP-CLIENT-C2
  neighbor 172.16.2.2 update-source Loopback0
  neighbor 172.16.2.3 remote-as 200
- neighbor 172.16.2.3 description iBGP-PEER-RR-PRIMARIO-C3
  neighbor 172.16.2.3 update-source Loopback0
  neighbor 172.16.2.5 remote-as 200
- neighbor 172.16.2.5 description iBGP-CLIENT-C5
  neighbor 172.16.2.5 update-source Loopback0
  !
  address-family ipv4
@@ -194,28 +70,3 @@ ip forward-protocol nd
 !
 ip ftp username dubuntu
 ip ftp password 123456
-ip http server
-ip http secure-server
-ip route vrf clab-mgmt 0.0.0.0 0.0.0.0 Ethernet0/0 172.20.20.1
-ip ssh bulk-mode 131072
-!
-ipv6 route vrf clab-mgmt ::/0 Ethernet0/0 3FFF:172:20:20::1
-!
-!
-!
-!
-control-plane
-!
-!
-!
-line con 0
- logging synchronous
-line aux 0
-line vty 0 4
- login local
- transport input ssh
-!
-!
-!
-!
-end
