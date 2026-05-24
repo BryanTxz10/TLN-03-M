@@ -108,13 +108,13 @@ def generar_config_cpe(params):
         f"hostname {params['hostname']}",
         
         # 1. IP SLA y Track
-        "ip sla 2",
+        "ip sla 1",
         "icmp-echo 8.8.8.8 source-interface Loopback0",
         "frequency 5",
         "exit",
-        "ip sla schedule 2 life forever start-time now",
-        "track 200 ip sla 2 reachability",
-        "delay down 5 up 10",
+        "ip sla schedule 1 life forever start-time now",
+        "track 100 ip sla 1 reachability",
+        "delay down 10 up 20",
         
         # 2. Interfaces Lógicas y Físicas Parametrizadas
         "interface Loopback0",
@@ -147,7 +147,7 @@ def generar_config_cpe(params):
             f"vrrp {vlan['id']} priority {params['vrrp_prio']}"
         ])
             
-        cmds.append(f"vrrp {vlan['id']} track 200 decrement 20")
+        cmds.append(f"vrrp {vlan['id']} track 100 decrement 20")
         cmds.append("exit")
         
     # 4. Enrutamiento (OSPF dinámico)
