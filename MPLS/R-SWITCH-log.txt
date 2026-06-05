@@ -1,0 +1,30 @@
+
+
+
+SW-2#
+SW-2#terminal width 511
+SW-2#terminal length 0
+SW-2#
+SW-2#
+SW-2#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-2(config)#
+SW-2(config)#vlan 10
+SW-2(config-vlan)#Cliente A
+                  ^
+% Invalid input detected at '^' marker.
+
+SW-2(config-vlan)#interface e0/1
+SW-2(config-if)#description Conexion con PE2
+SW-2(config-if)#switchport trunk encapsulation dot1q
+SW-2(config-if)#switchport mode trunk
+SW-2(config-if)#switchport trunk allowed vlan add 10
+SW-2(config-if)#interface e0/2
+SW-2(config-if)#description Conexion con Cliente A
+SW-2(config-if)#switchport mode access
+SW-2(config-if)#switchport access vlan 10
+SW-2(config-if)#
+SW-2(config-if)#end
+SW-2#
+SW-2#
+SW-2#exit

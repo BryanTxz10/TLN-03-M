@@ -1,0 +1,58 @@
+config_interfaces = [
+    "interface lo0",
+    "ip address 172.16.1.4 255.255.255.255",
+    "mpls ip",
+    "interface e0/1",
+    "description Conexion con PE1",
+    "ip address 10.0.0.6 255.255.255.252",
+    "ip ospf network point-to-point",
+    "mpls ip",
+    "no shutdown",
+    "interface e0/2",
+    "description Conexion con RR1",
+    "ip address 10.0.0.18 255.255.255.252",
+    "ip ospf network point-to-point",
+    "mpls ip",
+    "no shutdown",
+    "interface e0/3",
+    "description Conexion con P2",
+    "ip address 10.0.0.21 255.255.255.252",
+    "ip ospf network point-to-point",
+    "mpls ip",
+    "no shutdown",
+    "interface e1/0",
+    "description Conexion con RR2",
+    "ip address 10.0.0.25 255.255.255.252",
+    "ip ospf network point-to-point",
+    "mpls ip",
+    "no shutdown",
+    "interface e1/1",
+    "description Conexion con PE2",
+    "ip address 10.0.0.29 255.255.255.252",
+    "ip ospf network point-to-point",
+    "mpls ip",
+    "no shutdown"
+]
+
+config_igp = [
+    "router ospf 10",
+    "network 172.16.1.4 0.0.0.0 area 0",
+    "network 10.0.0.4 0.0.0.3 area 0",
+    "network 10.0.0.16 0.0.0.3 area 0",
+    "network 10.0.0.20 0.0.0.3 area 0",
+    "network 10.0.0.24 0.0.0.3 area 0",
+    "network 10.0.0.28 0.0.0.3 area 0"
+]
+
+config_bgp = [
+    "router bgp 100",
+    "bgp router-id interface lo0",
+    "no bgp default ipv4-unicast",
+    "neighbor 172.16.1.5 remote-as 100",
+    "neighbor 172.16.1.5 update-source lo0",
+    "neighbor 172.16.1.6 remote-as 100",
+    "neighbor 172.16.1.6 update-source lo0",
+    "address-family ipv4 unicast",
+    "neighbor 172.16.1.5 activate",
+    "neighbor 172.16.1.6 activate",
+]

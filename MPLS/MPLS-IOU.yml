@@ -1,0 +1,128 @@
+name: MPLS
+
+topology:
+  nodes:
+
+    #########################################
+    #    Core MPLS (AS 100)
+    #########################################
+   
+    PE1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+    
+    PE2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+
+    P1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+
+    P2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+
+    RR1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+
+    RR2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+  
+    #########################################
+    #    SW DE ACCESO CONECTADO A PE1
+    #########################################
+    SW-1:
+      kind: cisco_iol
+      type: l2
+      image: vrnetlab/cisco_iol:L2-17.12.1
+
+    #########################################
+    #    SW DE ACCESO CONECTADO A PE2
+    #########################################
+    SW-2:
+      kind: cisco_iol
+      type: l2
+      image: vrnetlab/cisco_iol:L2-17.12.1
+
+    #########################################
+    #    Cliente A - Sede 1
+    #########################################
+    CPE-1:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+    
+    SW-LAN-1:
+      kind: cisco_iol
+      type: l2
+      image: vrnetlab/cisco_iol:L2-17.12.1
+
+    PC-LAN-1:
+      kind: linux
+      image: alpine:3.23
+      exec:
+        - ip add add 192.168.10.10/24 dev eth1
+        - ip -6 add add 2001:192:168:10::10 dev eth1
+        - ip route replace default via 192.168.10.1 dev eth1
+        - ip -6 route replace default via 2001:192:168:10::1 dev eth1
+
+    #########################################
+    #    Cliente A - Sede 2
+    #########################################
+    CPE-2:
+      kind: cisco_iol
+      image: vrnetlab/cisco_iol:17.12.1
+
+    SW-LAN-2:
+      kind: cisco_iol
+      type: l2
+      image: vrnetlab/cisco_iol:L2-17.12.1
+
+    PC-LAN-2:
+      kind: linux
+      image: alpine:3.23
+      exec:
+        - ip add add 192.168.20.10/24 dev eth1
+        - ip -6 add add 2001:192:168:20::10 dev eth1
+        - ip route replace default via 192.168.20.1 dev eth1
+        - ip -6 route replace default via 2001:192:168:20::1 dev eth1
+  links:
+    #########################################
+    # Enlaces de la red MPLS
+    #########################################
+    - endpoints: [ "PE1:e0/1", "RR1:e0/1" ]
+    - endpoints: [ "PE1:e0/2", "P1:e0/1" ]
+    - endpoints: [ "PE1:e0/3", "P2:e0/1" ]
+    - endpoints: [ "RR1:e0/2", "P1:e0/2" ]
+    - endpoints: [ "RR1:e0/3", "RR2:e0/1" ]
+    - endpoints: [ "P1:e0/3", "P2:e0/2" ]
+    - endpoints: [ "P1:e1/0", "RR2:e0/2" ]
+    - endpoints: [ "P1:e1/1", "PE2:e0/1" ]
+    - endpoints: [ "P2:e0/3", "PE2:e0/2" ]
+    - endpoints: [ "RR2:e0/3", "PE2:e0/3" ]
+
+    #########################################
+    # Conexión de MPLS con Accesos
+    #########################################
+    - endpoints: [ "PE1:e1/0", "SW-1:e0/1" ]
+    - endpoints: [ "PE2:e1/0", "SW-2:e0/1" ]
+
+    #########################################
+    # Conexión de Accesos con CPE
+    #########################################
+    - endpoints: [ "SW-1:e0/2", "CPE-1:e0/1" ]
+    - endpoints: [ "SW-2:e0/2", "CPE-2:e0/1" ]
+
+    #########################################
+    # Conexión en Sede 1
+    #########################################
+    - endpoints: [ "CPE-1:e0/2", "SW-LAN-1:e0/1" ]
+    - endpoints: [ "SW-LAN-1:e0/2", "PC-LAN-1:eth1" ]
+
+    #########################################
+    # Conexión en Sede 2
+    #########################################
+    - endpoints: [ "CPE-2:e0/2", "SW-LAN-2:e0/1" ]
+    - endpoints: [ "SW-LAN-2:e0/2", "PC-LAN-2:eth1" ]

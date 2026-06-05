@@ -1,0 +1,35 @@
+
+
+
+CPE-2#
+CPE-2#terminal width 511
+CPE-2#terminal length 0
+CPE-2#
+CPE-2#
+CPE-2#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+CPE-2(config)#
+CPE-2(config)#interface e0/1
+CPE-2(config-if)#description Conexion con PE2
+CPE-2(config-if)#ip address 10.0.2.2 255.255.255.252
+CPE-2(config-if)#ipv6 add FC20::2/64
+CPE-2(config-if)#no shutdown
+CPE-2(config-if)#interface e0/2
+CPE-2(config-if)#description Conexion con LAN
+CPE-2(config-if)#ip address 192.168.20.1 255.255.255.0
+CPE-2(config-if)#ipv6 address 2001:192:168:20::1/64
+CPE-2(config-if)#no shutdown
+CPE-2(config-if)#
+CPE-2(config-if)#end
+CPE-2#
+CPE-2#
+CPE-2#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+CPE-2(config)#
+CPE-2(config)#ip route 192.168.10.0 255.255.255.0 10.0.2.1
+CPE-2(config)#ipv6 route 2001:192:168:10::/64 FC20::1
+CPE-2(config)#
+CPE-2(config)#end
+CPE-2#
+CPE-2#
+CPE-2#exit
