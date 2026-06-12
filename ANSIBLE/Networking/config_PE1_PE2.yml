@@ -1,0 +1,12 @@
+- name: Configurar Loopback en PE1 y PE2
+  hosts: MPLS_PE1_PE2
+  gather_facts: false
+
+  tasks:
+    - name: Configurar Loopback100
+      ios_interfaces:
+        config: 
+          - name: Loopback100
+            description: Configurado con Ansible
+            enabled: true
+        state: deleted

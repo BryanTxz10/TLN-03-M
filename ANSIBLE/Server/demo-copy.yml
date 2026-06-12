@@ -1,0 +1,20 @@
+- name: Copiar archivo desde Ubuntu Desktop a Ubuntu Server
+  hosts: server
+
+  tasks:
+     - name: copiar un archivo a /etc de Ubuntu Server
+       copy:
+         src: sshd_config
+         dest: /etc/ssh/sshd_config
+       become: true
+
+     - name: Recargar el systemd
+       systemd:
+         daemon_reload: yes
+       become: true
+       
+     - name: Reiniciar el servicio ssh en systemd
+       systemd:
+         name: ssh.socket
+         state: restarted
+       become: true

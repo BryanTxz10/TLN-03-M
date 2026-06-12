@@ -1,0 +1,14 @@
+[MPLS_routers]
+clab-MPLS-PE1
+clab-MPLS-PE2
+clab-MPLS-P1
+clab-MPLS-P2
+clab-MPLS-RR1
+clab-MPLS-RR2
+
+[MPLS_routers:vars]
+ansible_user=admin
+ansible_password=admin
+ansible_network_os=cisco.ios.ios
+ansible_connection=ansible.netcommon.network_cli
+ansible_paramiko_look_for_keys=False

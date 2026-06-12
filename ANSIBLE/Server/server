@@ -1,0 +1,7 @@
+[server]
+subuntu ansible_host=192.168.3.20
+
+[server:vars]
+ansible_user=subuntu
+ansible_ssh_pass=123456
+ansible_become_password=123456

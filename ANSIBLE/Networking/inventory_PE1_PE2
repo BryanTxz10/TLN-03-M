@@ -1,0 +1,9 @@
+[MPLS_PE1_PE2]
+clab-MPLS-PE1
+clab-MPLS-PE2
+
+[MPLS_PE1_PE2:vars]
+ansible_user=admin
+ansible_password=admin
+ansible_network_os=ios
+ansible_connection=ansible.netcommon.network_cli

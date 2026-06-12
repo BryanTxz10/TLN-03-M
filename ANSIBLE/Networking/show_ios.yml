@@ -1,0 +1,13 @@
+- name: Mostrar interfaces en CISCO
+  hosts: MPLS_routers
+  gather_facts: false
+
+  tasks:
+    - name: mostrar interfaces en todos los MPLS_routers
+      ios_command:
+        commands: "show ip interface brief"
+      register: resultado
+    
+    - name: Imprimir en la terminal
+      debug:
+        var: resultado.stdout_lines
