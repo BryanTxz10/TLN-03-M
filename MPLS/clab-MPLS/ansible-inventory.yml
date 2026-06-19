@@ -1,0 +1,43 @@
+all:
+  vars:
+    # The generated inventory is assumed to be used from the clab host.
+    # Hence no http proxy should be used. Therefore we make sure the http
+    # module does not attempt using any global http proxy.
+    ansible_httpapi_use_proxy: false
+  children:
+    cisco_iol:
+      vars:
+        # ansible_connection: set ansible_connection variable if required
+        ansible_user: admin
+        ansible_password: admin
+      hosts:
+        clab-MPLS-CPE-1:
+          ansible_host: 172.20.20.9
+        clab-MPLS-CPE-2:
+          ansible_host: 172.20.20.10
+        clab-MPLS-P1:
+          ansible_host: 172.20.20.7
+        clab-MPLS-P2:
+          ansible_host: 172.20.20.2
+        clab-MPLS-PE1:
+          ansible_host: 172.20.20.12
+        clab-MPLS-PE2:
+          ansible_host: 172.20.20.13
+        clab-MPLS-RR1:
+          ansible_host: 172.20.20.5
+        clab-MPLS-RR2:
+          ansible_host: 172.20.20.15
+        clab-MPLS-SW-1:
+          ansible_host: 172.20.20.3
+        clab-MPLS-SW-2:
+          ansible_host: 172.20.20.6
+        clab-MPLS-SW-LAN-1:
+          ansible_host: 172.20.20.14
+        clab-MPLS-SW-LAN-2:
+          ansible_host: 172.20.20.4
+    linux:
+      hosts:
+        clab-MPLS-PC-LAN-1:
+          ansible_host: 172.20.20.8
+        clab-MPLS-PC-LAN-2:
+          ansible_host: 172.20.20.11

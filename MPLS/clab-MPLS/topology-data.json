@@ -1,0 +1,745 @@
+{
+  "name": "MPLS",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-3d8cc1837401",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "3fff:172:20:20::1",
+        "external-access": true
+      }
+    }
+  },
+  "ssh-pub-keys": ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMyzY9cGBPS/8kmIVD0v+1+OEuZdSUVLLwgh48EXiz8V"],
+  "nodes": {
+    "CPE-1": {
+      "index": "0",
+      "shortname": "CPE-1",
+      "longname": "clab-MPLS-CPE-1",
+      "fqdn": "CPE-1.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/CPE-1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.9",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::9",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/CPE-1",
+        "clab-node-longname": "clab-MPLS-CPE-1",
+        "clab-node-name": "CPE-1",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "CPE-2": {
+      "index": "1",
+      "shortname": "CPE-2",
+      "longname": "clab-MPLS-CPE-2",
+      "fqdn": "CPE-2.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/CPE-2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.10",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::a",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/CPE-2",
+        "clab-node-longname": "clab-MPLS-CPE-2",
+        "clab-node-name": "CPE-2",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "P1": {
+      "index": "2",
+      "shortname": "P1",
+      "longname": "clab-MPLS-P1",
+      "fqdn": "P1.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/P1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.7",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::7",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/P1",
+        "clab-node-longname": "clab-MPLS-P1",
+        "clab-node-name": "P1",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "P2": {
+      "index": "3",
+      "shortname": "P2",
+      "longname": "clab-MPLS-P2",
+      "fqdn": "P2.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/P2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.2",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::2",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/P2",
+        "clab-node-longname": "clab-MPLS-P2",
+        "clab-node-name": "P2",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "PC-LAN-1": {
+      "index": "4",
+      "shortname": "PC-LAN-1",
+      "longname": "clab-MPLS-PC-LAN-1",
+      "fqdn": "PC-LAN-1.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/PC-LAN-1",
+      "kind": "linux",
+      "image": "alpine:3.23",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.8",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::8",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/PC-LAN-1",
+        "clab-node-longname": "clab-MPLS-PC-LAN-1",
+        "clab-node-name": "PC-LAN-1",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "PC-LAN-2": {
+      "index": "5",
+      "shortname": "PC-LAN-2",
+      "longname": "clab-MPLS-PC-LAN-2",
+      "fqdn": "PC-LAN-2.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/PC-LAN-2",
+      "kind": "linux",
+      "image": "alpine:3.23",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.11",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::b",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/PC-LAN-2",
+        "clab-node-longname": "clab-MPLS-PC-LAN-2",
+        "clab-node-name": "PC-LAN-2",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "PE1": {
+      "index": "6",
+      "shortname": "PE1",
+      "longname": "clab-MPLS-PE1",
+      "fqdn": "PE1.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/PE1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.12",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::c",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/PE1",
+        "clab-node-longname": "clab-MPLS-PE1",
+        "clab-node-name": "PE1",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "PE2": {
+      "index": "7",
+      "shortname": "PE2",
+      "longname": "clab-MPLS-PE2",
+      "fqdn": "PE2.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/PE2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.13",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::d",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/PE2",
+        "clab-node-longname": "clab-MPLS-PE2",
+        "clab-node-name": "PE2",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "RR1": {
+      "index": "8",
+      "shortname": "RR1",
+      "longname": "clab-MPLS-RR1",
+      "fqdn": "RR1.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/RR1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.5",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::5",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/RR1",
+        "clab-node-longname": "clab-MPLS-RR1",
+        "clab-node-name": "RR1",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "RR2": {
+      "index": "9",
+      "shortname": "RR2",
+      "longname": "clab-MPLS-RR2",
+      "fqdn": "RR2.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/RR2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.15",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::f",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/RR2",
+        "clab-node-longname": "clab-MPLS-RR2",
+        "clab-node-name": "RR2",
+        "clab-node-type": "",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "SW-1": {
+      "index": "10",
+      "shortname": "SW-1",
+      "longname": "clab-MPLS-SW-1",
+      "fqdn": "SW-1.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/SW-1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.3",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::3",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/SW-1",
+        "clab-node-longname": "clab-MPLS-SW-1",
+        "clab-node-name": "SW-1",
+        "clab-node-type": "l2",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "SW-2": {
+      "index": "11",
+      "shortname": "SW-2",
+      "longname": "clab-MPLS-SW-2",
+      "fqdn": "SW-2.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/SW-2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.6",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::6",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/SW-2",
+        "clab-node-longname": "clab-MPLS-SW-2",
+        "clab-node-name": "SW-2",
+        "clab-node-type": "l2",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "SW-LAN-1": {
+      "index": "12",
+      "shortname": "SW-LAN-1",
+      "longname": "clab-MPLS-SW-LAN-1",
+      "fqdn": "SW-LAN-1.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/SW-LAN-1",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.14",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::e",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/SW-LAN-1",
+        "clab-node-longname": "clab-MPLS-SW-LAN-1",
+        "clab-node-name": "SW-LAN-1",
+        "clab-node-type": "l2",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    },
+    "SW-LAN-2": {
+      "index": "13",
+      "shortname": "SW-LAN-2",
+      "longname": "clab-MPLS-SW-LAN-2",
+      "fqdn": "SW-LAN-2.MPLS.io",
+      "group": "",
+      "labdir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/SW-LAN-2",
+      "kind": "cisco_iol",
+      "image": "vrnetlab/cisco_iol:L2-17.12.1",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.4",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::4",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-3d8cc1837401",
+        "clab-node-group": "",
+        "clab-node-kind": "cisco_iol",
+        "clab-node-lab-dir": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/clab-MPLS/SW-LAN-2",
+        "clab-node-longname": "clab-MPLS-SW-LAN-2",
+        "clab-node-name": "SW-LAN-2",
+        "clab-node-type": "l2",
+        "clab-owner": "bryantxz",
+        "clab-topo-file": "/home/bryantxz/TLN03/TLN-03-M/TLN-03-M/MPLS/MPLS-IOU.yml",
+        "containerlab": "MPLS"
+      },
+      "port-bindings": [
+      ]
+    }
+  },
+  "links": [
+    {
+      "endpoints": {
+        "a": {
+          "node": "PE1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:4f:f2:8f",
+          "peer": "z"
+        },
+        "z": {
+          "node": "RR1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:5a:61:ce",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "PE1",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:7e:7f:0d",
+          "peer": "z"
+        },
+        "z": {
+          "node": "P1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:12:41:ca",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "PE1",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:b6:8f:08",
+          "peer": "z"
+        },
+        "z": {
+          "node": "P2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:63:a1:92",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "RR1",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:d6:de:ca",
+          "peer": "z"
+        },
+        "z": {
+          "node": "P1",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:a0:59:d4",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "RR1",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:5c:47:c7",
+          "peer": "z"
+        },
+        "z": {
+          "node": "RR2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:15:33:d8",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "P1",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:f6:20:8d",
+          "peer": "z"
+        },
+        "z": {
+          "node": "P2",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:df:6a:b7",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "P1",
+          "interface": "eth4",
+          "mac": "aa:c1:ab:a7:2c:85",
+          "peer": "z"
+        },
+        "z": {
+          "node": "RR2",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:aa:04:a5",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "P1",
+          "interface": "eth5",
+          "mac": "aa:c1:ab:c1:5f:50",
+          "peer": "z"
+        },
+        "z": {
+          "node": "PE2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:48:d4:71",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "P2",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:af:59:d9",
+          "peer": "z"
+        },
+        "z": {
+          "node": "PE2",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:8b:65:47",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "RR2",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:e2:69:4a",
+          "peer": "z"
+        },
+        "z": {
+          "node": "PE2",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:25:46:73",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "PE1",
+          "interface": "eth4",
+          "mac": "aa:c1:ab:ce:df:91",
+          "peer": "z"
+        },
+        "z": {
+          "node": "SW-1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:df:ca:55",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "PE2",
+          "interface": "eth4",
+          "mac": "aa:c1:ab:57:d2:de",
+          "peer": "z"
+        },
+        "z": {
+          "node": "SW-2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:c5:27:b4",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "SW-1",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:b5:c3:a6",
+          "peer": "z"
+        },
+        "z": {
+          "node": "CPE-1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:b4:9f:d4",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "SW-2",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:20:a2:51",
+          "peer": "z"
+        },
+        "z": {
+          "node": "CPE-2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:84:cd:42",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "CPE-1",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:74:46:1e",
+          "peer": "z"
+        },
+        "z": {
+          "node": "SW-LAN-1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:f9:06:c0",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "SW-LAN-1",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:17:d6:8f",
+          "peer": "z"
+        },
+        "z": {
+          "node": "PC-LAN-1",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:13:98:3c",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "CPE-2",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:21:d0:db",
+          "peer": "z"
+        },
+        "z": {
+          "node": "SW-LAN-2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:7d:c2:15",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "SW-LAN-2",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:c6:5e:ba",
+          "peer": "z"
+        },
+        "z": {
+          "node": "PC-LAN-2",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:3d:a9:90",
+          "peer": "a"
+        }
+      }
+    }
+  ]
+}

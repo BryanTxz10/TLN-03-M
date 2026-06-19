@@ -3,25 +3,3 @@ seccion-m.txt
 Estructura\ del\ Repositorio
 Topologias/Topologia-ISP.yml.annotations.json
 Topologias/clab-ISP-TDP-CLARO-IOL
-# ===== MPLS / Containerlab runtime =====
-MPLS/clab-MPLS/
-
-# runtime / IOU / configs dinámicas
-*.nvram*
-nvram_*
-*.iouyap.ini
-*.log
-*.tmp
-
-# topology runtime
-topology-data.json
-
-# TLS / certs (sensibles)
-.tls/
-*.pem
-*.key
-*.crt
-
-# inventories generados
-ansible-inventory.yml
-nornir-simple-inventory.yml
