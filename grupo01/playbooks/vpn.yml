@@ -1,0 +1,56 @@
+---
+- name: Configuracion VPNv4 y VPNv6
+  hosts: MPLS_PE
+  gather_facts: no
+  tasks:
+
+    - name: Crear VRF cliente
+      cisco.ios.ios_config:
+        lines:
+          - rd {{ vrf_rd }}
+          - route-target export {{ vrf_rt }}
+          - route-target import {{ vrf_rt }}
+          - address-family ipv4
+          - address-family ipv6
+        parents: vrf definition {{ vrf_name }}
+      when: vrf_name is defined
+
+    - name: Levantar interfaz fisica Ethernet1/0
+      cisco.ios.ios_config:
+        lines:
+          - no shutdown
+        parents: interface Ethernet1/0
+
+    - name: Configurar subinterfaz CE con VRF encapsulation e IP
+      cisco.ios.ios_config:
+        lines:
+          - encapsulation dot1q 10
+          - vrf forwarding {{ vrf_name }}
+          - ip address {{ ce_ip }} {{ ce_mask }}
+          - ipv6 address {{ ce_ipv6 }}
+          - no shutdown
+        parents: interface {{ ce_interface }}
+      when: ce_interface is defined
+
+    - name: Agregar rutas estaticas VRF
+      cisco.ios.ios_config:
+        lines: "{{ vrf_static_routes }}"
+      when: vrf_static_routes is defined
+
+    - name: Redistribuir estaticas y conectadas en BGP VPNv4
+      cisco.ios.ios_config:
+        lines:
+          - redistribute static
+          - redistribute connected
+        parents:
+          - router bgp 100
+          - address-family ipv4 vrf A
+
+    - name: Redistribuir estaticas y conectadas en BGP VPNv6
+      cisco.ios.ios_config:
+        lines:
+          - redistribute static
+          - redistribute connected
+        parents:
+          - router bgp 100
+          - address-family ipv6 vrf A

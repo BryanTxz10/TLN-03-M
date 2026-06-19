@@ -1,0 +1,63 @@
+---
+- name: Validacion servicios MPLS L3VPN
+  hosts: MPLS_PE
+  gather_facts: no
+  tasks:
+
+    - name: Verificar tabla VRF IPv4
+      cisco.ios.ios_command:
+        commands: show ip route vrf A
+      register: resultado_vrf
+
+    - name: Mostrar tabla VRF IPv4
+      debug:
+        var: resultado_vrf.stdout_lines
+
+    - name: Verificar tabla VRF IPv6
+      cisco.ios.ios_command:
+        commands: show ipv6 route vrf A
+      register: resultado_vrf6
+
+    - name: Mostrar tabla VRF IPv6
+      debug:
+        var: resultado_vrf6.stdout_lines
+
+    - name: Verificar vecindades OSPF
+      cisco.ios.ios_command:
+        commands: show ip ospf neighbor
+      register: resultado_ospf
+
+    - name: Mostrar vecindades OSPF
+      debug:
+        var: resultado_ospf.stdout_lines
+
+    - name: Verificar sesiones BGP vpnv4
+      cisco.ios.ios_command:
+        commands: show bgp vpnv4 unicast all summary
+      register: resultado_bgp
+
+    - name: Mostrar sesiones BGP
+      debug:
+        var: resultado_bgp.stdout_lines
+
+    - name: Ping IPv4 entre sedes via MPLS
+      cisco.ios.ios_command:
+        commands: ping vrf A 10.0.2.1 source 10.0.1.1
+      register: resultado_ping_v4
+      when: inventory_hostname == 'PE1'
+
+    - name: Mostrar resultado ping IPv4
+      debug:
+        var: resultado_ping_v4.stdout_lines
+      when: inventory_hostname == 'PE1'
+
+    - name: Ping IPv6 entre sedes via MPLS
+      cisco.ios.ios_command:
+        commands: ping vrf A FC20::1 source FC10::1
+      register: resultado_ping_v6
+      when: inventory_hostname == 'PE1'
+
+    - name: Mostrar resultado ping IPv6
+      debug:
+        var: resultado_ping_v6.stdout_lines
+      when: inventory_hostname == 'PE1'

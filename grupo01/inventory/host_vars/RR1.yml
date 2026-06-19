@@ -1,0 +1,32 @@
+loopback_ip: 172.16.1.5
+interfaces:
+  - name: Loopback0
+    ip_int: 172.16.1.5
+    mask_int: 255.255.255.255
+  - name: Ethernet0/1
+    ip_int: 10.0.0.2
+    mask_int: 255.255.255.252
+  - name: Ethernet0/2
+    ip_int: 10.0.0.17
+    mask_int: 255.255.255.252
+  - name: Ethernet0/3
+    ip_int: 10.0.0.13
+    mask_int: 255.255.255.252
+mpls_interfaces:
+  - Ethernet0/1
+  - Ethernet0/2
+  - Ethernet0/3
+bgp_neighbors:
+  - ip: 172.16.1.6
+    asn: 100
+  - ip: 172.16.1.1
+    asn: 100
+  - ip: 172.16.1.2
+    asn: 100
+  - ip: 172.16.1.3
+    asn: 100
+  - ip: 172.16.1.4
+    asn: 100
+vpnv4_clients:
+  - 172.16.1.1
+  - 172.16.1.2

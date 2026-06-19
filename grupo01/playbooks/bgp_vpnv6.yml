@@ -1,0 +1,16 @@
+---
+- name: Activar address-family vpnv6 en PE
+  hosts: MPLS_PE
+  gather_facts: no
+  tasks:
+
+    - name: Activar vecinos en address-family vpnv6
+      cisco.ios.ios_config:
+        lines:
+          - neighbor {{ item.ip }} activate
+          - neighbor {{ item.ip }} send-community extended
+        parents:
+          - router bgp 100
+          - address-family vpnv6
+      loop: "{{ bgp_neighbors }}"
+      when: bgp_neighbors is defined

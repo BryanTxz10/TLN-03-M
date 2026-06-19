@@ -1,0 +1,33 @@
+loopback_ip: 172.16.1.1
+vrf_name: A
+vrf_rd: "10:10"
+vrf_rt: "10:10"
+ce_interface: Ethernet1/0.10
+ce_ip: 10.0.1.1
+ce_mask: 255.255.255.252
+bgp_neighbors:
+  - ip: 172.16.1.5
+    asn: 100
+  - ip: 172.16.1.6
+    asn: 100
+mpls_interfaces:
+  - Ethernet0/1
+  - Ethernet0/2
+  - Ethernet0/3
+interfaces:
+  - name: Loopback0
+    ip_int: 172.16.1.1
+    mask_int: 255.255.255.255
+  - name: Ethernet0/1
+    ip_int: 10.0.0.1
+    mask_int: 255.255.255.252
+  - name: Ethernet0/2
+    ip_int: 10.0.0.5
+    mask_int: 255.255.255.252
+  - name: Ethernet0/3
+    ip_int: 10.0.0.9
+    mask_int: 255.255.255.252
+ce_ipv6: FC10::1/64
+vrf_static_routes:
+  - ip route vrf A 192.168.10.0 255.255.255.0 10.0.1.2
+  - ipv6 route vrf A 2001:192:168:10::/64 Ethernet1/0.10 FC10::2

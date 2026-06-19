@@ -1,0 +1,26 @@
+---
+- name: Configuracion Switches de Acceso
+  hosts: MPLS_SW
+  gather_facts: no
+  tasks:
+
+    - name: Crear vlan 10
+      cisco.ios.ios_config:
+        lines:
+          - name Cliente_A
+        parents: vlan 10
+
+    - name: Configurar puerto trunk hacia PE
+      cisco.ios.ios_config:
+        lines:
+          - switchport trunk encapsulation dot1q
+          - switchport mode trunk
+          - switchport trunk allowed vlan 10
+        parents: interface Ethernet0/1
+
+    - name: Configurar puerto access hacia CPE
+      cisco.ios.ios_config:
+        lines:
+          - switchport mode access
+          - switchport access vlan 10
+        parents: interface Ethernet0/2

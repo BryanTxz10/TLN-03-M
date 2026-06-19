@@ -1,0 +1,59 @@
+---
+- name: Configuracion CPEs Cliente A
+  hosts: MPLS_CPE
+  gather_facts: no
+  tasks:
+
+    - name: Configurar interfaces CPE1
+      cisco.ios.ios_config:
+        lines:
+          - description Conexion con PE1
+          - ip address 10.0.1.2 255.255.255.252
+          - ipv6 address FC10::2/64
+          - no shutdown
+        parents: interface Ethernet0/1
+      when: inventory_hostname == 'CPE1'
+
+    - name: Configurar LAN CPE1
+      cisco.ios.ios_config:
+        lines:
+          - description Conexion con LAN
+          - ip address 192.168.10.1 255.255.255.0
+          - ipv6 address 2001:192:168:10::1/64
+          - no shutdown
+        parents: interface Ethernet0/2
+      when: inventory_hostname == 'CPE1'
+
+    - name: Rutas estaticas CPE1
+      cisco.ios.ios_config:
+        lines:
+          - ip route 192.168.20.0 255.255.255.0 10.0.1.1
+          - ipv6 route 2001:192:168:20::/64 FC10::1
+      when: inventory_hostname == 'CPE1'
+
+    - name: Configurar interfaces CPE2
+      cisco.ios.ios_config:
+        lines:
+          - description Conexion con PE2
+          - ip address 10.0.2.2 255.255.255.252
+          - ipv6 address FC20::2/64
+          - no shutdown
+        parents: interface Ethernet0/1
+      when: inventory_hostname == 'CPE2'
+
+    - name: Configurar LAN CPE2
+      cisco.ios.ios_config:
+        lines:
+          - description Conexion con LAN
+          - ip address 192.168.20.1 255.255.255.0
+          - ipv6 address 2001:192:168:20::1/64
+          - no shutdown
+        parents: interface Ethernet0/2
+      when: inventory_hostname == 'CPE2'
+
+    - name: Rutas estaticas CPE2
+      cisco.ios.ios_config:
+        lines:
+          - ip route 192.168.10.0 255.255.255.0 10.0.2.1
+          - ipv6 route 2001:192:168:10::/64 FC20::1
+      when: inventory_hostname == 'CPE2'

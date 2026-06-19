@@ -1,0 +1,68 @@
+[
+  {
+    "router": "PE1",
+    "hostname": "PE1",
+    "modelo": "Unknown",
+    "version_ios": "Linux Software (X86_64BI_LINUX-ADVENTERPRISEK9-M), Version 17.12.1, RELEASE SOFTWARE (fc5)",
+    "interfaces_activas": 7,
+    "vecinos_bgp": 2,
+    "cpu_usage": "N/A",
+    "environment": "No disponible en IOL",
+    "estado": "OK"
+  },
+  {
+    "router": "PE2",
+    "hostname": "PE2",
+    "modelo": "Unknown",
+    "version_ios": "Linux Software (X86_64BI_LINUX-ADVENTERPRISEK9-M), Version 17.12.1, RELEASE SOFTWARE (fc5)",
+    "interfaces_activas": 7,
+    "vecinos_bgp": 2,
+    "cpu_usage": "N/A",
+    "environment": "No disponible en IOL",
+    "estado": "OK"
+  },
+  {
+    "router": "P1",
+    "hostname": "P1",
+    "modelo": "Unknown",
+    "version_ios": "Linux Software (X86_64BI_LINUX-ADVENTERPRISEK9-M), Version 17.12.1, RELEASE SOFTWARE (fc5)",
+    "interfaces_activas": 7,
+    "vecinos_bgp": 0,
+    "cpu_usage": "N/A",
+    "environment": "No disponible en IOL",
+    "estado": "OK"
+  },
+  {
+    "router": "P2",
+    "hostname": "P2",
+    "modelo": "Unknown",
+    "version_ios": "Linux Software (X86_64BI_LINUX-ADVENTERPRISEK9-M), Version 17.12.1, RELEASE SOFTWARE (fc5)",
+    "interfaces_activas": 5,
+    "vecinos_bgp": 0,
+    "cpu_usage": "N/A",
+    "environment": "No disponible en IOL",
+    "estado": "OK"
+  },
+  {
+    "router": "RR1",
+    "hostname": "RR1",
+    "modelo": "Unknown",
+    "version_ios": "Linux Software (X86_64BI_LINUX-ADVENTERPRISEK9-M), Version 17.12.1, RELEASE SOFTWARE (fc5)",
+    "interfaces_activas": 5,
+    "vecinos_bgp": 5,
+    "cpu_usage": "N/A",
+    "environment": "No disponible en IOL",
+    "estado": "OK"
+  },
+  {
+    "router": "RR2",
+    "hostname": "RR2",
+    "modelo": "Unknown",
+    "version_ios": "Linux Software (X86_64BI_LINUX-ADVENTERPRISEK9-M), Version 17.12.1, RELEASE SOFTWARE (fc5)",
+    "interfaces_activas": 5,
+    "vecinos_bgp": 5,
+    "cpu_usage": "N/A",
+    "environment": "No disponible en IOL",
+    "estado": "OK"
+  }
+]

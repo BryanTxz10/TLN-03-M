@@ -1,0 +1,26 @@
+loopback_ip: 172.16.1.4
+interfaces:
+  - name: Loopback0
+    ip_int: 172.16.1.4
+    mask_int: 255.255.255.255
+  - name: Ethernet0/1
+    ip_int: 10.0.0.6
+    mask_int: 255.255.255.252
+  - name: Ethernet0/2
+    ip_int: 10.0.0.18
+    mask_int: 255.255.255.252
+  - name: Ethernet0/3
+    ip_int: 10.0.0.21
+    mask_int: 255.255.255.252
+  - name: Ethernet1/0
+    ip_int: 10.0.0.25
+    mask_int: 255.255.255.252
+  - name: Ethernet1/1
+    ip_int: 10.0.0.29
+    mask_int: 255.255.255.252
+mpls_interfaces:
+  - Ethernet0/1
+  - Ethernet0/2
+  - Ethernet0/3
+  - Ethernet1/0
+  - Ethernet1/1

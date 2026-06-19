@@ -1,0 +1,26 @@
+---
+- name: Configuracion MP-BGP
+  hosts: MPLS_PE,MPLS_RR
+  gather_facts: no
+  tasks:
+
+    - name: Configurar router BGP
+      cisco.ios.ios_config:
+        lines:
+          - bgp router-id {{ loopback_ip }}
+          - neighbor {{ item.ip }} remote-as {{ item.asn }}
+          - neighbor {{ item.ip }} update-source Loopback0
+        parents: router bgp 100
+      loop: "{{ bgp_neighbors }}"
+      when: bgp_neighbors is defined
+
+    - name: Activar address-family vpnv4
+      cisco.ios.ios_config:
+        lines:
+          - neighbor {{ item.ip }} activate
+          - neighbor {{ item.ip }} send-community both
+        parents:
+          - router bgp 100
+          - address-family vpnv4
+      loop: "{{ bgp_neighbors }}"
+      when: bgp_neighbors is defined

@@ -1,0 +1,15 @@
+---
+- name: Configuracion de interfaces MPLS
+  hosts: MPLS_routers
+  gather_facts: no
+  tasks:
+
+    - name: Aplicar configuracion de interfaces
+      cisco.ios.ios_config:
+        lines:
+          - description Link configurado por Ansible
+          - ip address {{ item.ip_int }} {{ item.mask_int }}
+          - no shutdown
+        parents: interface {{ item.name }}
+      loop: "{{ interfaces }}"
+      when: interfaces is defined
