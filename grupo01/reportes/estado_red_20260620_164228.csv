@@ -1,0 +1,7 @@
+router,rol,ios_version,interfaces_activas,vecinos_ospf_full,peers_bgp_established,vecinos_ldp,estado
+PE1,PE,17.12.1,7,3,2,3,OK
+PE2,PE,17.12.1,7,3,2,3,OK
+P1,P,17.12.1,7,5,0,5,OK
+P2,P,17.12.1,5,3,0,3,OK
+RR1,RR,17.12.1,5,3,3,3,OK
+RR2,RR,17.12.1,5,3,3,3,OK
